@@ -1,0 +1,1803 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Abandoned but not Forgotten</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=DM+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&display=swap">
+<style>
+/* Layout: a stencil headline over a still starfield, then three worlds in order of distance (Moon, Mars, deep space).
+   Each world opens with something to poke at, and the machines speak for themselves. One dark look, chosen on purpose. */
+:root{
+  --night:#0a0e16; --deep:#0e1420; --panel:#131b29; --rim:#223044;
+  --chalk:#e8e4da; --mist:#97a5b9; --faint:#71819a;
+  --moon:#b9c9de; --mars:#e27a4e; --amber:#ebbb62; --live:#78d6a6;
+  --accent:var(--amber);
+  --display:"Big Shoulders Display","Arial Narrow","Helvetica Neue Condensed",Impact,sans-serif;
+  --body:"Newsreader",Georgia,"Times New Roman",serif;
+  --mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--night);color:var(--chalk);font-family:var(--body);font-size:1.125rem;line-height:1.6;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+p{margin:0}
+a{color:var(--chalk);text-decoration-color:var(--faint);text-underline-offset:3px}
+a:hover{text-decoration-color:var(--amber)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.01em;line-height:.95;margin:0;text-wrap:balance}
+h2{font-size:clamp(2.6rem,6.5vw,4.4rem)}
+h3{font-size:clamp(2rem,4vw,2.8rem)}
+.eyebrow{font-family:var(--mono);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.prose{max-width:62ch}
+.prose p+p{margin-top:1em}
+.mono{font-family:var(--mono)}
+
+.wrap{width:100%;max-width:1160px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+section{padding-block:clamp(56px,9vw,100px);border-top:1px solid var(--rim);scroll-margin-top:64px}
+@media (max-width:700px){section{scroll-margin-top:12px}}
+
+/* top bar */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--night)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(10,14,22,.96);border-bottom:1px solid var(--rim)}
+.top .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 28px;padding-block:10px}
+.brand{font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:1.2rem;text-decoration:none;color:var(--chalk)}
+.nav{display:flex;flex-wrap:wrap;gap:0 20px;font-family:var(--mono);font-size:.76rem;letter-spacing:.08em;text-transform:uppercase}
+.nav a{color:var(--mist);text-decoration:none;padding:8px 0}
+.nav a:hover{color:var(--chalk)}
+@media (max-width:700px){.top{position:static}}
+.skip{position:absolute;left:-999px;top:0;z-index:40;background:var(--chalk);color:var(--night);padding:8px 12px}
+.skip:focus{left:8px;top:8px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;background:radial-gradient(120% 70% at 50% 135%,rgba(185,201,222,.17),transparent 62%),linear-gradient(var(--night),#0b1119)}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero-in{position:relative;padding-block:clamp(44px,8vw,92px) clamp(40px,6vw,68px)}
+.hero h1{font-size:clamp(3.8rem,15vw,10.5rem);font-weight:900;line-height:.84;margin-top:20px}
+.hero h1 span{display:block}
+.hero h1 .ghost{color:var(--mist)}
+@supports (-webkit-text-stroke:1px #000){.hero h1 .ghost{color:transparent;-webkit-text-stroke:2px var(--mist)}}
+.hero h1 .mid{font-size:.3em;font-weight:700;letter-spacing:.34em;color:var(--amber);margin-block:.5em .42em}
+.lede{max-width:54ch;font-size:clamp(1.2rem,2.2vw,1.45rem);line-height:1.5;margin-top:30px}
+.hero-meta{margin-top:14px;font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;color:var(--mist)}
+.portals{list-style:none;margin:44px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.portals a{display:block;height:100%;padding:18px 18px 20px;border:1px solid var(--rim);border-top:3px solid var(--c);background:rgba(14,20,32,.8);text-decoration:none}
+.portals a:hover{background:rgba(24,34,52,.92)}
+.portals .p-name{display:block;font-family:var(--display);font-weight:800;font-size:2.2rem;text-transform:uppercase;line-height:1}
+.portals .p-count{display:block;margin-top:8px;font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c)}
+.portals .p-desc{display:block;margin-top:10px;color:var(--mist);font-size:1rem;line-height:1.45}
+@media (max-width:760px){.portals{grid-template-columns:1fr}}
+
+/* why */
+.why{--accent:var(--amber)}
+.why-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,5vw,64px);align-items:start}
+.why-grid h2{margin:12px 0 24px}
+.how{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1px;background:var(--rim);border:1px solid var(--rim);margin-top:14px}
+.how>div{background:var(--night);padding:16px;min-width:0}
+.how h4{margin:0;font-family:var(--mono);font-weight:500;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--chalk)}
+.how p{margin-top:8px;font-size:1rem;line-height:1.45;color:var(--mist)}
+.names{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.gobtn{font-family:var(--mono);font-size:.76rem;border:1px solid var(--rim);background:transparent;padding:5px 9px;cursor:pointer;border-radius:2px;color:var(--chalk)}
+.gobtn:hover{border-color:var(--amber);color:var(--amber)}
+@media (max-width:860px){.why-grid{grid-template-columns:1fr}}
+
+/* worlds */
+.world-moon{--accent:var(--moon);background:linear-gradient(180deg,rgba(185,201,222,.05),transparent 340px)}
+.world-mars{--accent:var(--mars);background:linear-gradient(180deg,rgba(226,122,78,.06),transparent 340px)}
+.world-deep{--accent:var(--amber);background:linear-gradient(180deg,rgba(235,187,98,.05),transparent 340px)}
+.world-head{display:grid;gap:14px;max-width:68ch;margin-bottom:36px}
+.explorer{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,4vw,56px);align-items:start}
+.explorer.wide{grid-template-columns:minmax(0,1fr)}
+.mapcol{min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:14px 28px;margin-bottom:18px}
+.grouplabel{margin:0 0 8px;font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.chiprow{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.8rem;color:var(--mist);background:transparent;border:1px solid var(--rim);border-radius:999px;padding:7px 13px;cursor:pointer}
+.chip:hover{color:var(--chalk);border-color:var(--faint)}
+.chip[aria-pressed="true"]{color:var(--night);background:var(--accent);border-color:var(--accent)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;border:1.5px solid currentColor;flex:none}
+.dot.live{background:var(--live);border-color:var(--live)}
+.chip[aria-pressed="true"] .dot.live{background:var(--night);border-color:var(--night)}
+
+.moonbox{position:relative;width:100%;max-width:520px;aspect-ratio:1/1;margin-inline:auto}
+.moonbox canvas,.marsbox canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.mapscroll{overflow-x:auto;border:1px solid var(--rim);background:var(--deep)}
+.marsbox{position:relative;min-width:720px;aspect-ratio:2/1}
+.pins{position:absolute;inset:0}
+.pin{position:absolute;transform:translate(-50%,-50%);width:30px;height:30px;padding:0;border:0;background:transparent;cursor:pointer;display:grid;place-items:center}
+.pin i{display:block;width:12px;height:12px;background:var(--chalk);border:2px solid var(--night);box-shadow:0 0 0 1px rgba(255,255,255,.5)}
+.pin.crew i,.pin.silent i,.pin.live i{border-radius:50%}
+.pin.robot i{transform:rotate(45deg);width:11px;height:11px;border-radius:1px}
+.pin.live i{background:var(--live)}
+.pin[aria-pressed="true"] i{background:var(--amber);width:15px;height:15px;box-shadow:0 0 0 3px var(--night),0 0 0 5px var(--amber)}
+.pin-name{position:absolute;left:calc(100% - 5px);top:50%;transform:translateY(-50%);white-space:nowrap;font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;color:var(--chalk);background:rgba(10,14,22,.85);padding:2px 6px;display:none;pointer-events:none}
+.pin[data-side="left"] .pin-name{left:auto;right:calc(100% - 5px)}
+.moonbox .pin[aria-pressed="true"] .pin-name,.moonbox .pin:hover .pin-name,.moonbox .pin:focus-visible .pin-name{display:block}
+.marsbox .pin-name{display:block}
+.feat{position:absolute;transform:translate(-50%,-50%);font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,240,225,.8);text-shadow:0 1px 2px rgba(0,0,0,.7);pointer-events:none;white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:12px;font-family:var(--mono);font-size:.72rem;color:var(--mist)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{display:inline-block;width:10px;height:10px;background:var(--chalk)}
+.legend .c{border-radius:50%}
+.legend .d{transform:rotate(45deg);width:9px;height:9px}
+.legend .g{border-radius:50%;background:var(--live)}
+@media (max-width:900px){.explorer{grid-template-columns:minmax(0,1fr)}}
+
+/* dossier */
+.dossier{border-top:1px solid var(--accent);padding-top:22px;min-width:0}
+.dossier .kicker{font-family:var(--mono);font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.dossier h3{margin-top:10px}
+.dossier .place{margin-top:10px;color:var(--mist);font-size:1rem}
+.status{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border:1px solid var(--rim);border-radius:999px;color:var(--mist)}
+.status.st-live{color:var(--live);border-color:rgba(120,214,166,.45)}
+.dossier .body{display:block}
+.dossier .story{margin-top:20px;max-width:62ch}
+.facts{margin:24px 0 0;border-top:1px solid var(--rim)}
+.facts div{display:grid;grid-template-columns:minmax(92px,28%) minmax(0,1fr);gap:14px;padding:10px 0;border-bottom:1px solid var(--rim)}
+.facts dt{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding-top:4px}
+.facts dd{margin:0;font-size:1rem;line-height:1.5}
+.voice{margin:26px 0 0;padding:16px 18px;border-left:2px solid var(--accent);background:rgba(255,255,255,.03)}
+.voice figcaption{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.voice blockquote{margin:0;font-style:italic;font-size:1.1rem;line-height:1.55}
+.src{margin-top:18px;font-family:var(--mono);font-size:.74rem;color:var(--mist);display:flex;flex-wrap:wrap;gap:4px 16px}
+@media (min-width:820px){
+  .dossier.wide .body{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start}
+  .dossier.wide .facts{margin-top:20px}
+}
+
+/* mars extras */
+.parts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--rim);border:1px solid var(--rim);margin-top:56px}
+.parts>div{background:var(--night);padding:18px;min-width:0}
+.parts h4{margin:0;font-family:var(--mono);font-weight:500;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase}
+.parts p{margin-top:8px;font-size:1rem;line-height:1.5;color:var(--mist)}
+.parts-head{margin-top:56px;display:grid;gap:10px;max-width:62ch}
+.parts-head+.parts{margin-top:20px}
+.parts-note{margin-top:14px;font-size:1rem;color:var(--mist)}
+@media (max-width:760px){.parts{grid-template-columns:1fr}}
+
+/* comic */
+.story-sec{--accent:var(--mars)}
+.story-sec .world-head{margin-bottom:30px}
+.comic{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.panel{margin:0;border:1px solid var(--rim);background:var(--deep);min-width:0}
+.panel svg{display:block;width:100%;height:auto;aspect-ratio:4/3}
+.panel figcaption{padding:12px 14px 16px}
+.panel .when{display:block;font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mars)}
+.panel p{margin-top:6px;font-size:1rem;line-height:1.5}
+.coda{margin-top:22px;padding:20px 22px;border:1px solid var(--rim);display:grid;gap:6px;max-width:80ch}
+.coda .when{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--live)}
+@media (max-width:900px){.comic{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.comic{grid-template-columns:minmax(0,1fr)}}
+
+/* deep space */
+.countdown{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px 48px;align-items:center;padding:26px 0;border-top:1px solid var(--rim);border-bottom:1px solid var(--rim);margin-bottom:48px}
+.countdown .cd-note{margin-top:10px;max-width:56ch;font-size:1.05rem;line-height:1.5}
+.countdown .cd-small{color:var(--mist);font-size:1rem}
+.cd-digits{display:flex;gap:clamp(14px,3vw,30px)}
+.cd-digits div{min-width:0}
+.cd-digits b{display:block;font-family:var(--display);font-weight:800;font-size:clamp(2.8rem,7.5vw,4.6rem);line-height:.95;color:var(--amber);min-width:2ch}
+.cd-digits span{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mist)}
+@media (max-width:820px){.countdown{grid-template-columns:minmax(0,1fr)}}
+.chart-head{display:grid;gap:8px;max-width:62ch;margin-bottom:22px}
+.chart-head h3{font-size:clamp(1.8rem,3.6vw,2.4rem)}
+.chart-head p{color:var(--mist);font-size:1rem}
+.ladder{margin:0 0 56px;padding:0;list-style:none;display:grid;gap:12px}
+.lrow{display:grid;grid-template-columns:minmax(130px,24%) minmax(0,1fr);gap:6px 18px;align-items:center}
+.lname{font-size:1rem;line-height:1.25;min-width:0}
+.lname small{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.03em;color:var(--mist)}
+.ltrack,.otrack{position:relative;height:22px;background-repeat:no-repeat}
+.lbar,.obar{position:absolute;top:4px;bottom:4px;min-width:3px}
+.lbar.moon{background:var(--moon)} .lbar.mars,.obar.mars{background:var(--mars)} .lbar.mist{background:var(--mist)} .lbar.amber,.obar.deep{background:var(--amber)}
+.laxis{position:relative;height:22px;margin-top:2px}
+.laxis span{position:absolute;top:0;transform:translateX(-50%);font-family:var(--mono);font-size:.66rem;color:var(--faint);white-space:nowrap}
+.laxis span.first{transform:none}
+.laxis span.last{transform:translateX(-100%)}
+.lrow.axis{margin-top:-4px}
+.chart-note{margin-top:14px;font-size:.95rem;color:var(--mist);max-width:64ch}
+@media (max-width:640px){.lrow{grid-template-columns:minmax(0,1fr)}.lrow.axis>div:first-child{display:none}}
+
+/* outlast chart */
+.outlast{--accent:var(--mars)}
+.orows{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+.orow{display:grid;grid-template-columns:minmax(150px,26%) minmax(0,1fr);gap:6px 18px;align-items:center}
+.otrack{height:26px}
+.obar{top:3px;bottom:3px}
+.oval{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--display);font-weight:800;font-size:1.25rem;letter-spacing:.02em;white-space:nowrap}
+.oval.in{color:var(--night)}
+.okey{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:20px;font-family:var(--mono);font-size:.72rem;color:var(--mist)}
+.okey span{display:inline-flex;align-items:center;gap:7px}
+.okey i{display:inline-block;width:12px;height:10px}
+@media (max-width:640px){.orow{grid-template-columns:minmax(0,1fr)}}
+
+/* quiz */
+.quiz-sec{--accent:var(--amber)}
+.quiz-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 28px;margin:26px 0 30px}
+.score{font-family:var(--display);font-weight:800;font-size:2rem;color:var(--amber);line-height:1}
+.quiz{display:grid;gap:26px;max-width:780px}
+.q{padding-bottom:26px;border-bottom:1px solid var(--rim)}
+.q .qn{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.q .qtext{margin-top:6px;font-size:1.25rem;font-weight:600;line-height:1.35}
+.opts{display:grid;gap:8px;margin-top:14px}
+.opt{text-align:left;font-size:1.02rem;line-height:1.4;color:var(--chalk);background:var(--panel);border:1px solid var(--rim);padding:11px 14px;cursor:pointer;border-radius:3px}
+.opt:hover:not(:disabled){border-color:var(--faint)}
+.opt:disabled{cursor:default;opacity:1}
+.opt.right{border-color:var(--live);background:rgba(120,214,166,.12)}
+.opt.wrong{border-color:var(--mars);background:rgba(226,122,78,.13)}
+.q .why{margin-top:12px;color:var(--mist);font-size:1rem;max-width:62ch}
+.q .why b{color:var(--chalk);font-weight:600}
+.btn{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--faint);background:transparent;padding:9px 16px;cursor:pointer;color:var(--chalk);border-radius:2px}
+.btn:hover{border-color:var(--amber);color:var(--amber)}
+
+/* about + sources */
+.about-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,5vw,64px);align-items:start}
+.about-grid h2{margin-top:12px}
+.about dl{margin:0;border-top:1px solid var(--rim)}
+.about dl div{display:grid;grid-template-columns:minmax(110px,26%) minmax(0,1fr);gap:16px;padding:14px 0;border-bottom:1px solid var(--rim)}
+.about dt{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);padding-top:4px}
+.about dd{margin:0;font-size:1.02rem;line-height:1.55}
+@media (max-width:860px){.about-grid{grid-template-columns:minmax(0,1fr)}}
+.src-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;margin-top:30px}
+.src-grid h3{font-size:1.6rem;margin-bottom:12px}
+.src-grid ul{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:.98rem;line-height:1.4}
+.src-grid a{overflow-wrap:anywhere}
+.src-note{margin-top:30px;max-width:70ch;color:var(--mist);font-size:1rem}
+@media (max-width:860px){.src-grid{grid-template-columns:minmax(0,1fr)}}
+.foot{padding-block:36px 56px;border-top:1px solid var(--rim);color:var(--mist);font-size:.95rem}
+.foot p+p{margin-top:8px}
+</style>
+<style>
+/* additions on top of head.html */
+.hero{padding-block:0;border-top:0}
+.hero .eyebrow{color:var(--mist)}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+main{display:block}
+.world-head .prose{margin-top:2px}
+
+/* map extras */
+.mapcol .count{margin-top:10px;font-family:var(--mono);font-size:.74rem;color:var(--mist)}
+.mapcol .empty{margin-top:14px;padding:14px 16px;border:1px dashed var(--faint);color:var(--mist);font-size:1rem}
+.mapcol .tip{margin-top:12px;font-size:.95rem;color:var(--mist);max-width:62ch}
+.pin[hidden]{display:none}
+.swipe{display:none;color:var(--chalk)}
+@media (max-width:760px){.swipe{display:inline}}
+.hero h1{max-width:100%}
+.pin-name{z-index:2}
+.pin[aria-pressed="true"]{z-index:3}
+
+/* dossier extras */
+.dossier .side{min-width:0}
+.dossier .note{margin-top:20px;padding:12px 14px;border:1px dashed var(--faint);font-size:.98rem;line-height:1.5;color:var(--mist);max-width:62ch}
+.dossier .note b{color:var(--chalk);font-weight:600}
+.dossier .src span{color:var(--faint);text-transform:uppercase;letter-spacing:.1em;font-size:.68rem;align-self:center}
+.dossier .src a{color:var(--mist)}
+.dossier .src a:hover{color:var(--chalk)}
+.dossier .voice blockquote{text-wrap:pretty}
+
+/* ladder gridlines */
+.ltrack{background-image:linear-gradient(var(--rim),var(--rim)),linear-gradient(var(--rim),var(--rim)),linear-gradient(var(--rim),var(--rim)),linear-gradient(var(--rim),var(--rim)),linear-gradient(var(--rim),var(--rim));background-size:1px 100%;background-position:0 0,25% 0,50% 0,75% 0,100% 0}
+.otrack{background-image:linear-gradient(var(--rim),var(--rim)),linear-gradient(var(--rim),var(--rim)),linear-gradient(var(--rim),var(--rim)),linear-gradient(var(--rim),var(--rim)),linear-gradient(var(--rim),var(--rim)),linear-gradient(var(--rim),var(--rim)),linear-gradient(var(--rim),var(--rim));background-size:1px 100%;background-position:0 0,16.667% 0,33.333% 0,50% 0,66.667% 0,83.333% 0,100% 0}
+.obar.live{background:var(--live)}
+.lbar,.obar{left:0}
+.chart-sec{padding-top:0;border-top:0}
+.lname b{font-weight:500}
+
+/* comic */
+.panel svg{background:var(--deep)}
+.panel .when{margin-bottom:2px}
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+
+/* quiz */
+.quiz-msg{font-family:var(--mono);font-size:.8rem;color:var(--mist);letter-spacing:.04em}
+.q .qn{display:block}
+.opt:focus-visible{outline-offset:2px}
+
+/* about */
+.about dd+dt{margin-top:0}
+.glossary{margin-top:30px}
+.glossary h3{font-size:1.6rem;margin-bottom:12px}
+
+/* footer */
+.foot .wrap{display:grid;gap:8px}
+.foot strong{color:var(--chalk);font-weight:600}
+
+@media (max-width:700px){
+  .brand{font-size:1.05rem}
+  .nav{gap:0 14px}
+  .pin{width:34px;height:34px}
+  .lname,.lname small{overflow-wrap:anywhere}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="gDay" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a97b62"/><stop offset="1" stop-color="#e6b88c"/></linearGradient>
+    <linearGradient id="gStorm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b1c19"/><stop offset="1" stop-color="#85502f"/></linearGradient>
+    <linearGradient id="gNight" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#070a12"/><stop offset="1" stop-color="#1b2030"/></linearGradient>
+    <linearGradient id="gDusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f1d3a"/><stop offset=".6" stop-color="#6a4358"/><stop offset="1" stop-color="#d28a60"/></linearGradient>
+    <symbol id="rover" viewBox="0 0 120 70">
+      <g fill="currentColor">
+        <rect x="20" y="24" width="80" height="6" rx="1.5"/>
+        <rect x="28" y="30" width="64" height="14" rx="2"/>
+        <rect x="36" y="8" width="3" height="16"/>
+        <rect x="31" y="4" width="13" height="6" rx="1.5"/>
+        <ellipse cx="86" cy="21" rx="10" ry="3.5"/>
+        <rect x="85" y="21" width="2" height="4"/>
+        <rect x="92" y="34" width="22" height="3" rx="1.5"/>
+        <circle cx="116" cy="36" r="3"/>
+        <circle cx="24" cy="56" r="10"/>
+        <circle cx="60" cy="56" r="10"/>
+        <circle cx="96" cy="56" r="10"/>
+      </g>
+      <path d="M30 44L24 56M60 44V56M90 44L96 56" stroke="currentColor" stroke-width="3" fill="none"/>
+      <g style="fill:var(--night)"><circle cx="24" cy="56" r="3.5"/><circle cx="60" cy="56" r="3.5"/><circle cx="96" cy="56" r="3.5"/></g>
+    </symbol>
+  </defs>
+</svg>
+
+<a class="skip" href="#main">Skip to the story</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top">Abandoned but not Forgotten</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#why">Why</a>
+      <a href="#moon">Moon</a>
+      <a href="#mars">Mars</a>
+      <a href="#deep">Deep space</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#sources">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero" id="top">
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <div class="wrap hero-in">
+    <p class="eyebrow">2026 NASA Space Apps Challenge</p>
+    <h1><span>Abandoned</span><span class="mid">but not</span><span class="ghost">Forgotten</span></h1>
+    <p class="lede">Since the 1960s, NASA has left machines on the Moon, on Mars and out in deep space. Most of them went quiet long ago. A few are still working. This is where they are and what they did.</p>
+    <p class="hero-meta">25 machines in three places. Every date and number is checked against the sources at the bottom.</p>
+    <ul class="portals">
+      <li><a href="#moon" style="--c:var(--moon)"><span class="p-name">The Moon</span><span class="p-count" data-count="moon">9 machines</span><span class="p-desc">Six crewed landings, three robot landers and mirrors that still work today.</span></a></li>
+      <li><a href="#mars" style="--c:var(--mars)"><span class="p-name">Mars</span><span class="p-count" data-count="mars">10 machines</span><span class="p-desc">Landers, rovers and a helicopter. Two rovers are still driving.</span></a></li>
+      <li><a href="#deep" style="--c:var(--amber)"><span class="p-name">Deep space</span><span class="p-count" data-count="deep">6 spacecraft</span><span class="p-desc">Voyager, Pioneer and probes that ran out of fuel or power.</span></a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="why" id="why">
+  <div class="wrap why-grid">
+    <div>
+      <p class="eyebrow">Why this story</p>
+      <h2>Silent is not the same as gone</h2>
+      <div class="prose">
+        <p>For more than sixty years NASA has sent machines to places people could not reach yet. When their work ended, most of them stayed where they were. Landers sit where they touched down. Rovers stopped in the middle of a drive. Probes are still flying with their radios switched off.</p>
+        <p>Each one answered a question. Opportunity read the rocks of ancient Mars. Mirrors left by Apollo crews still measure how fast the Moon is drifting away. Pioneer 10 carries a plaque toward a star. These machines are monuments, and some of them are still working.</p>
+      </div>
+    </div>
+    <div>
+      <p class="eyebrow">How to explore</p>
+      <div class="how">
+        <div><h4>Pick a place</h4><p>The Moon, Mars and deep space each open with a map or a chart.</p></div>
+        <div><h4>Tap a machine</h4><p>Every marker opens a file: where it is, what it did and how it ended.</p></div>
+        <div><h4>Filter the Moon</h4><p>Show only crewed landings, only robots, or only machines that still work.</p></div>
+        <div><h4>Test yourself</h4><p>Finish with ten questions about what you read.</p></div>
+      </div>
+      <p class="eyebrow" style="margin-top:28px">Jump straight to</p>
+      <div class="names">
+        <button class="gobtn" type="button" data-go="opportunity">Opportunity</button>
+        <button class="gobtn" type="button" data-go="apollo12">Apollo 12 and Surveyor 3</button>
+        <button class="gobtn" type="button" data-go="ingenuity">Ingenuity</button>
+        <button class="gobtn" type="button" data-go="voyager1">Voyager 1</button>
+        <button class="gobtn" type="button" data-go="dawn">Dawn</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MOON -->
+<section class="world-moon" id="moon">
+  <div class="wrap">
+    <div class="world-head">
+      <p class="eyebrow">The Moon, 1.3 light-seconds away</p>
+      <h2>The Moon keeps everything</h2>
+      <div class="prose">
+        <p>The Moon has no wind or rain to wipe things away. Boot prints, rover tracks and landers stay exactly where they were left. Between 1966 and 1972 NASA put five robot landers and six crews on the surface. NASA's Lunar Reconnaissance Orbiter can still see their equipment from above.</p>
+      </div>
+    </div>
+    <div class="explorer">
+      <div class="mapcol">
+        <div class="chips" id="moon-filters">
+          <div>
+            <p class="grouplabel" id="mg-who">Who went</p>
+            <div class="chiprow" role="group" aria-labelledby="mg-who">
+              <button class="chip" type="button" aria-pressed="true" data-group="who" data-value="all">Anyone</button>
+              <button class="chip" type="button" aria-pressed="false" data-group="who" data-value="crew">Crews</button>
+              <button class="chip" type="button" aria-pressed="false" data-group="who" data-value="robot">Robots only</button>
+            </div>
+          </div>
+          <div>
+            <p class="grouplabel" id="mg-now">Today</p>
+            <div class="chiprow" role="group" aria-labelledby="mg-now">
+              <button class="chip" type="button" aria-pressed="true" data-group="now" data-value="all">Any</button>
+              <button class="chip" type="button" aria-pressed="false" data-group="now" data-value="silent">Silent</button>
+              <button class="chip" type="button" aria-pressed="false" data-group="now" data-value="live"><span class="dot live"></span>Still in use</button>
+            </div>
+          </div>
+        </div>
+        <div class="moonbox">
+          <canvas id="moon-canvas" role="img" aria-label="Stylised map of the near side of the Moon with the landing sites marked"></canvas>
+          <div class="pins" id="moon-pins"></div>
+        </div>
+        <div class="legend">
+          <span><i class="c"></i>Crewed landing</span>
+          <span><i class="d"></i>Robot lander</span>
+          <span><i class="g"></i>Still in use</span>
+        </div>
+        <p class="count" id="moon-count" aria-live="polite"></p>
+        <p class="tip">Near side of the Moon, drawn from above. Pins that sit close together are nudged apart so you can tap them.</p>
+      </div>
+      <article class="dossier" id="moon-dossier" aria-live="polite" aria-label="Machine file"></article>
+    </div>
+  </div>
+</section>
+
+<!-- MARS -->
+<section class="world-mars" id="mars">
+  <div class="wrap">
+    <div class="world-head">
+      <p class="eyebrow">Mars, 3 to 22 light-minutes away</p>
+      <h2>Mars is full of machines</h2>
+      <div class="prose">
+        <p>Ten NASA machines are marked below. Eight have stopped. Two rovers are still working, and one of them just broke a record that an abandoned rover held for years.</p>
+      </div>
+    </div>
+    <div class="explorer wide">
+      <div class="mapcol">
+        <div class="mapscroll" tabindex="0" role="region" aria-label="Map of Mars. Scrolls sideways on small screens.">
+          <div class="marsbox">
+            <canvas id="mars-canvas" role="img" aria-label="Stylised map of Mars with NASA landing sites marked"></canvas>
+            <div id="mars-feats"></div>
+            <div class="pins" id="mars-pins"></div>
+          </div>
+        </div>
+        <div class="legend">
+          <span><i class="c"></i>Silent or retired</span>
+          <span><i class="g"></i>Still working</span>
+        </div>
+        <p class="tip">A schematic map, not a photograph. Landers and rovers in the same crater are nudged apart so you can tap them. <span class="swipe">Swipe the map sideways to see all of Mars.</span></p>
+      </div>
+      <article class="dossier wide" id="mars-dossier" aria-live="polite" aria-label="Machine file"></article>
+    </div>
+
+    <div class="parts-head">
+      <p class="eyebrow">Left behind on the way down</p>
+      <h3>The parts nobody drives</h3>
+      <p class="prose">A landing leaves hardware on the ground that was never meant to work after it arrived. These are the pieces from Perseverance's landing, and one piece from Opportunity's.</p>
+    </div>
+    <div class="parts">
+      <div><h4>Heat shield</h4><p>It protects a spacecraft while it plunges into the air. Opportunity photographed its own discarded heat shield in early January 2005 and drove over to study it.</p></div>
+      <div><h4>Parachute and backshell</h4><p>Dropped at a safe distance during the descent. On April 19, 2022, Ingenuity photographed them from the air, about 1 km (0.6 miles) northwest of the landing site.</p></div>
+      <div><h4>Descent stage</h4><p>This rocket platform lowered Perseverance on cables, then flew away and crashed about 2 km (1.2 miles) to the southeast, so it could not land on the rover.</p></div>
+    </div>
+    <p class="parts-note">NASA tracks this debris on purpose. Teams check that it does not drift into the rover's sample tubes, and they report no immediate concerns.</p>
+  </div>
+</section>
+
+<!-- COMIC -->
+<section class="story-sec" id="story">
+  <div class="wrap">
+    <div class="world-head">
+      <p class="eyebrow">One machine, start to finish</p>
+      <h2>The last months of Opportunity</h2>
+      <div class="prose">
+        <p>Opportunity was built to work for 90 Martian days. This is how it spent 14 years instead, and how it ended.</p>
+      </div>
+    </div>
+    <div class="comic">
+      <figure class="panel">
+        <svg viewBox="0 0 400 300" role="img" aria-label="An airbag-wrapped lander bouncing three times across the Martian ground, then a rover resting at the end of the bounces">
+          <rect width="400" height="300" fill="url(#gDay)"/>
+          <circle cx="338" cy="62" r="13" fill="#f6e3c4" opacity=".9"/>
+          <path d="M0 226 Q100 238 200 226 Q300 214 400 224 L400 300 L0 300Z" fill="#7a4429"/>
+          <path d="M0 262 Q120 246 240 262 T400 256 L400 300 L0 300Z" fill="#62361f"/>
+          <path d="M30 226Q90 40 150 226M150 226Q196 118 242 226M242 226Q274 168 306 226" fill="none" stroke="#f6e3c4" stroke-width="2" stroke-dasharray="3 7" opacity=".85"/>
+          <g fill="#eceae4" stroke="#9aa0a8" stroke-width="2"><circle cx="90" cy="133" r="19"/><circle cx="196" cy="172" r="15"/><circle cx="274" cy="197" r="12"/></g>
+          <use href="#rover" x="302" y="184" width="76" height="44" style="color:#e8e4da"/>
+        </svg>
+        <figcaption><span class="when">Jan. 24, 2004</span><p>Opportunity lands in Meridiani Planum, bouncing inside a ring of airbags. NASA planned for it to work for 90 Martian days.</p></figcaption>
+      </figure>
+      <figure class="panel">
+        <svg viewBox="0 0 400 300" role="img" aria-label="A rover driving away from a long line of wheel tracks that runs back to the horizon">
+          <rect width="400" height="300" fill="url(#gDay)"/>
+          <path d="M0 222 Q100 232 200 222 Q300 212 400 220 L400 300 L0 300Z" fill="#7a4429"/>
+          <path d="M0 270 Q150 250 300 268 T400 262 L400 300 L0 300Z" fill="#62361f"/>
+          <path d="M236 270L24 230M262 276L40 234" stroke="#f1d3a8" stroke-width="2" stroke-dasharray="6 6" fill="none" opacity=".9"/>
+          <g fill="#5d3320"><ellipse cx="90" cy="252" rx="14" ry="5"/><ellipse cx="330" cy="288" rx="18" ry="5"/><ellipse cx="170" cy="282" rx="10" ry="4"/></g>
+          <use href="#rover" x="236" y="204" width="132" height="77" style="color:#e8e4da"/>
+          <text x="22" y="214" fill="#f6e3c4" style="font:500 13px var(--mono)">45 km of tracks</text>
+        </svg>
+        <figcaption><span class="when">2004 to 2018</span><p>It keeps driving, from crater to crater. By the end its odometer reads more than 28 miles (45 km), farther than any vehicle has driven on another world.</p></figcaption>
+      </figure>
+      <figure class="panel">
+        <svg viewBox="0 0 400 300" role="img" aria-label="A rover under a dark brown sky, with the Sun a faint disc behind dust">
+          <rect width="400" height="300" fill="url(#gStorm)"/>
+          <circle cx="300" cy="84" r="34" fill="#f0c89a" opacity=".16"/>
+          <circle cx="300" cy="84" r="14" fill="#f0c89a" opacity=".55"/>
+          <path d="M0 232 Q120 218 240 232 T400 226 L400 300 L0 300Z" fill="#4a2a1a"/>
+          <g fill="#c78d63" opacity=".4"><circle cx="40" cy="60" r="3"/><circle cx="96" cy="120" r="2"/><circle cx="150" cy="40" r="3"/><circle cx="210" cy="140" r="2"/><circle cx="64" cy="200" r="3"/><circle cx="260" cy="60" r="2"/><circle cx="340" cy="160" r="3"/><circle cx="380" cy="40" r="2"/><circle cx="120" cy="170" r="2"/><circle cx="310" cy="210" r="2"/><circle cx="20" cy="140" r="2"/><circle cx="230" cy="210" r="3"/><circle cx="180" cy="90" r="2"/><circle cx="370" cy="110" r="3"/></g>
+          <use href="#rover" x="140" y="188" width="104" height="61" style="color:#2a1810"/>
+        </svg>
+        <figcaption><span class="when">June 2018</span><p>A dust storm covers Mars. It blots out the Sun over Opportunity's solar panels, and they can no longer charge the batteries.</p></figcaption>
+      </figure>
+      <figure class="panel">
+        <svg viewBox="0 0 400 300" role="img" aria-label="A rover silhouette at night sending three curved radio signals toward a small blue dot, Earth">
+          <rect width="400" height="300" fill="url(#gNight)"/>
+          <g fill="#e8e4da"><circle cx="40" cy="40" r="1.2"/><circle cx="110" cy="80" r="1"/><circle cx="170" cy="30" r="1.4"/><circle cx="260" cy="64" r="1"/><circle cx="300" cy="22" r="1.2"/><circle cx="380" cy="110" r="1"/><circle cx="70" cy="140" r="1"/><circle cx="20" cy="96" r="1"/></g>
+          <circle cx="350" cy="52" r="9" fill="#7fb4e8" opacity=".25"/><circle cx="350" cy="52" r="4.5" fill="#9cc7f2"/>
+          <path d="M0 250 Q130 236 260 250 T400 246 L400 300 L0 300Z" fill="#14121a"/>
+          <use href="#rover" x="120" y="184" width="120" height="70" style="color:#3d3240"/>
+          <g fill="none" stroke="#ebbb62" stroke-width="3" stroke-linecap="round"><path d="M213.8 178A30 30 0 0 1 235 199.2" opacity=".95"/><path d="M221.5 149A60 60 0 0 1 264 191.5" opacity=".6"/><path d="M229.3 120.1A90 90 0 0 1 292.9 183.7" opacity=".3"/></g>
+        </svg>
+        <figcaption><span class="when">June 10, 2018</span><p>NASA receives Opportunity's final communication. Nothing arrives after that.</p></figcaption>
+      </figure>
+      <figure class="panel">
+        <svg viewBox="0 0 400 300" role="img" aria-label="A dusty rover at night while dashed command signals from the sky reach it but nothing comes back">
+          <rect width="400" height="300" fill="url(#gNight)"/>
+          <g fill="#e8e4da"><circle cx="50" cy="70" r="1.2"/><circle cx="130" cy="30" r="1"/><circle cx="220" cy="50" r="1.3"/><circle cx="350" cy="30" r="1"/><circle cx="380" cy="130" r="1.2"/><circle cx="90" cy="130" r="1"/><circle cx="300" cy="100" r="1"/></g>
+          <circle cx="318" cy="72" r="3.4" fill="#bdb3a6"/><circle cx="352" cy="92" r="2" fill="#a59d92"/>
+          <path d="M0 250 Q130 236 260 250 T400 246 L400 300 L0 300Z" fill="#14121a"/>
+          <path d="M60 20L168 186M96 20L184 184M132 20L200 182" stroke="#97a5b9" stroke-width="2" stroke-dasharray="4 8" fill="none" opacity=".75"/>
+          <use href="#rover" x="120" y="184" width="120" height="70" style="color:#3d3240"/>
+          <ellipse cx="170" cy="210" rx="52" ry="5" fill="#8a5a3c" opacity=".6"/>
+        </svg>
+        <figcaption><span class="when">Late 2018 to Feb. 2019</span><p>Engineers keep sending commands and listening for eight months. The storm clears, but the rover does not answer.</p></figcaption>
+      </figure>
+      <figure class="panel">
+        <svg viewBox="0 0 400 300" role="img" aria-label="A rover parked on a slope in a valley at dusk with a long shadow and one bright star">
+          <rect width="400" height="300" fill="url(#gDusk)"/>
+          <circle cx="312" cy="66" r="9" fill="#cfe3ff" opacity=".18"/><circle cx="312" cy="66" r="3" fill="#e6f0ff"/>
+          <path d="M0 176Q60 134 124 164T252 154T400 140L400 300L0 300Z" fill="#5a3a4a"/>
+          <path d="M0 234Q90 204 160 236T300 230T400 218L400 300L0 300Z" fill="#33202e"/>
+          <ellipse cx="236" cy="257" rx="78" ry="6" fill="#150b14" opacity=".7"/>
+          <use href="#rover" x="170" y="196" width="112" height="65" style="color:#e8e4da"/>
+        </svg>
+        <figcaption><span class="when">Feb. 13, 2019</span><p>NASA declares the mission complete. Opportunity's last parking place is on the western rim of Perseverance Valley.</p></figcaption>
+      </figure>
+    </div>
+    <div class="coda">
+      <span class="when">Oct. 11, 2026</span>
+      <p>Opportunity's record of 28.06 miles (45.16 km) stood until Perseverance's odometer reached 28.10 miles (45.22 km). When the record fell, NASA's team remembered the rover that set it. At the end, project manager John Callas said: "Farewell, Opportunity, and well done."</p>
+    </div>
+  </div>
+</section>
+
+<!-- OUTLAST -->
+<section class="outlast chart-sec" id="outlast">
+  <div class="wrap">
+    <div class="chart-head">
+      <p class="eyebrow">Built for less</p>
+      <h3>How many times longer than planned?</h3>
+      <p>Each bar shows how long a Mars machine worked, compared with what NASA planned. Green bars are still working, so they are still growing.</p>
+    </div>
+    <ul class="orows" id="orows"></ul>
+    <div class="okey"><span><i style="background:var(--mars)"></i>Stopped working</span><span><i style="background:var(--live)"></i>Still working</span></div>
+    <p class="chart-note">Lifetimes run from landing to the last contact. Ingenuity is counted in flights, not time. Curiosity and Perseverance were planned for one Martian year, which is 687 Earth days.</p>
+  </div>
+</section>
+
+<!-- DEEP SPACE -->
+<section class="world-deep" id="deep">
+  <div class="wrap">
+    <div class="world-head">
+      <p class="eyebrow">Deep space, up to one light-day away</p>
+      <h2>Out where the radio takes a day</h2>
+      <div class="prose">
+        <p>The farthest machines are so far away that a message takes hours to reach them. Some are still talking. Others ran out of power years ago and are still flying, still orbiting or still sitting where they landed.</p>
+      </div>
+    </div>
+
+    <div class="countdown" id="countdown">
+      <div>
+        <p class="eyebrow">Countdown</p>
+        <h3>Voyager 1 reaches one light-day from Earth</h3>
+        <p class="cd-note" id="cd-note">On Nov. 18, 2026 at 06:16 UTC, Voyager 1 will be about 16.1 billion miles (25.9 billion km) away. A radio message sent from Earth will then take a full 24 hours to arrive.</p>
+        <p class="cd-note cd-small">It left Earth on Sept. 5, 1977. NASA expects Voyager 2 to reach the same mark in November 2035.</p>
+      </div>
+      <div class="cd-digits" role="timer" aria-label="Time left until Voyager 1 is one light-day from Earth">
+        <div><b id="cd-d">00</b><span>days</span></div>
+        <div><b id="cd-h">00</b><span>hours</span></div>
+        <div><b id="cd-m">00</b><span>min</span></div>
+        <div><b id="cd-s">00</b><span>sec</span></div>
+      </div>
+    </div>
+
+    <div class="chart-head">
+      <h3>How far is far?</h3>
+      <p>Distance from Earth, measured by how long a radio signal takes to arrive. Light travels about 300,000 km every second.</p>
+    </div>
+    <ul class="ladder" id="ladder"></ul>
+    <p class="chart-note">On this scale the Moon and Mars are slivers. Voyager 2's distance is rounded from NASA's August 2026 figure. The Pluto bar shows how far away it was during the New Horizons flyby in 2015.</p>
+
+    <div class="explorer wide" style="margin-top:56px">
+      <div class="mapcol">
+        <p class="grouplabel" id="dg-label">Pick a spacecraft</p>
+        <div class="chiprow" id="deep-chips" role="group" aria-labelledby="dg-label"></div>
+      </div>
+      <article class="dossier wide" id="deep-dossier" aria-live="polite" aria-label="Spacecraft file"></article>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="quiz-sec" id="quiz">
+  <div class="wrap">
+    <p class="eyebrow">Your turn</p>
+    <h2>Test what you know</h2>
+    <div class="quiz-top">
+      <span class="score" id="quiz-score" aria-live="polite">0 of 10 right</span>
+      <span class="quiz-msg" id="quiz-msg">Answer all ten to finish.</span>
+      <button class="btn" type="button" id="quiz-reset">Start again</button>
+    </div>
+    <div class="quiz" id="quiz-list"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="wrap about-grid">
+    <div>
+      <p class="eyebrow">About this project</p>
+      <h2>Made for the challenge</h2>
+    </div>
+    <div>
+      <dl>
+        <div><dt>Challenge</dt><dd>Abandoned but not Forgotten: Storytelling about NASA's Discarded Equipment on the Moon and Mars, from the 2026 NASA Space Apps Challenge.</dd></div>
+        <div><dt>Made for</dt><dd>School-age space fans, roughly ages 9 to 15, and anyone else who is curious. Hard words are explained below.</dd></div>
+        <div><dt>Accuracy</dt><dd>Dates, distances and quotes come from NASA and the other sources listed below, checked in November 2026. The boxes marked "Imagined voice" are made up from real events and are always labelled.</dd></div>
+        <div><dt>Built with</dt><dd>One web page in HTML, CSS and JavaScript. No tracking, no accounts. Every marker is a button you can reach with the Tab key.</dd></div>
+      </dl>
+      <div class="glossary">
+        <h3>Words you will meet</h3>
+        <dl>
+          <div><dt>Lander</dt><dd>A spacecraft that touches down and stays where it lands.</dd></div>
+          <div><dt>Rover</dt><dd>A robot with wheels that drives around after it lands.</dd></div>
+          <div><dt>Light-day</dt><dd>The distance light travels in one day, about 25.9 billion km. A light-second and a light-minute work the same way.</dd></div>
+          <div><dt>Martian day</dt><dd>One turn of Mars, about 24 hours 40 minutes long. Scientists call it a sol.</dd></div>
+          <div><dt>Mirror panel</dt><dd>Small mirrors that send light straight back to where it came from. Scientists call them retroreflectors.</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<section id="sources">
+  <div class="wrap">
+    <p class="eyebrow">Check my work</p>
+    <h2>Sources</h2>
+    <div class="src-grid">
+      <div><h3>Moon</h3><ul id="src-moon"></ul></div>
+      <div><h3>Mars</h3><ul id="src-mars"></ul></div>
+      <div><h3>Deep space</h3><ul id="src-deep"></ul></div>
+    </div>
+    <p class="src-note">Where retellings differ from NASA, this site follows NASA. Two examples are the Apollo 12 camera microbes and the "battery is low" line from Opportunity, both marked with notes. Landing coordinates on the maps are approximate and only used to place the markers.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p><strong>Abandoned but not Forgotten</strong> is an independent project made for the 2026 NASA Space Apps Challenge. It is not affiliated with or endorsed by NASA.</p>
+    <p>NASA's name appears only to describe its missions. No NASA logos or images are used.</p>
+  </div>
+</footer>
+<script>
+/* Abandoned but not Forgotten: data. Facts were checked against the sources listed in SRC (Nov. 2026). */
+const SRC = {
+  apollo:["NASA NSSDC: Apollo landings", "https://nssdc.gsfc.nasa.gov/planetary/lunar/apolloland.html"],
+  eos:   ["Eos: Seeing the light", "https://eos.org/features/seeing-the-light"],
+  space12:["Space.com: Surveyor 3 parts", "https://www.space.com/apollo-12-surveyor-3-parts-50-years.html"],
+  lro:   ["Planetary Society: LRO and Apollo sites", "https://planetary.org/articles/3172"],
+  nasa7: ["NASA: Surveyor 7", "https://www.nasa.gov/feature/50-years-ago-surveyor-7-launches"],
+  nasa6: ["NASA: Surveyor 6", "https://www.nasa.gov/feature/50-years-ago-surveyor-6-launches"],
+  linda: ["Linda Hall Library: Surveyor program", "https://www.lindahall.org/experience/digital-exhibitions/mapping-the-moon/06-surveyor-program/"],
+  jplopp:["JPL: Opportunity mission ends", "https://www.jpl.nasa.gov/news/nasas-opportunity-rover-mission-on-mars-comes-to-end/"],
+  perse: ["NASA: Perseverance sets a record", "https://science.nasa.gov/blogs/perseverance-mars-rover/2026/10/12/nasas-perseverance-sets-off-world-record-for-total-distance-driven/"],
+  spirit:["NASA: Spirit", "https://science.nasa.gov/mission/mer-spirit"],
+  viking:["JPL: Viking 1", "https://www.jpl.nasa.gov/news/attempts-to-communicate-to-viking-lander-1-concluded/"],
+  pathf: ["JPL: Mars Pathfinder", "https://www.jpl.nasa.gov/news/mars-pathfinder-winds-down-after-phenomenal-mission/"],
+  phoenix:["JPL: Phoenix", "https://www.jpl.nasa.gov/news/mars-phoenix-lander-finishes-successful-work-on-red-planet/"],
+  insight:["NASA: InSight", "https://www.nasa.gov/?p=437895"],
+  ingen: ["NASA: Ingenuity", "https://www.nasa.gov/news-release/after-three-years-on-mars-nasas-ingenuity-helicopter-mission-ends"],
+  edl:   ["NASA: Landing debris", "https://science.nasa.gov/blogs/images-of-edl-debris"],
+  curio: ["Space.com: Curiosity", "https://www.space.com/26336-mars-rover-curiosity-martian-year-anniversary.html"],
+  voylight:["EarthSky: Voyager 1 one light-day", "https://earthsky.org/space/voyager-1-1-light-day-from-earth-november-17-18-2026/"],
+  voyblog:["NASA: Voyager 1 instrument shut off", "https://science.nasa.gov/blogs/voyager/2026/04/17/nasa-shuts-off-instrument-on-voyager-1-to-keep-spacecraft-operating/"],
+  voy2:  ["IFLScience: Voyager 2", "https://www.iflscience.com/nasa-pulls-off-smart-move-to-prolong-lifespan-of-aging-voyager-2-as-it-flies-2137-billion-kilometers-from-earth-84310"],
+  pioneer:["NASA: Pioneer 10 and 11", "https://science.nasa.gov/missions/pioneer/10-things-pioneer-days/"],
+  dawn:  ["NASA: Dawn mission ends", "https://nssdc.gsfc.nasa.gov/planetary/text/dawn_pr_20181101.txt"],
+  near:  ["JHU APL: NEAR landing", "https://www.jhuapl.edu/news/news-releases/210212-NEAR-landing-legacy"]
+};
+
+const SRC_GROUPS = {
+  moon: ["apollo", "eos", "space12", "lro", "nasa7", "nasa6", "linda"],
+  mars: ["jplopp", "perse", "spirit", "viking", "pathf", "phoenix", "insight", "ingen", "edl", "curio"],
+  deep: ["voylight", "voyblog", "voy2", "pioneer", "dawn", "near"]
+};
+
+/* lat/lon are approximate and only place the markers. nudge = [degrees east, degrees north] applied to the marker only. */
+const MACHINES = [
+  /* ---------- MOON ---------- */
+  {
+    id: "apollo11", world: "moon", kind: "crew", live: true, name: "Apollo 11", lat: 0.67, lon: 23.47,
+    kicker: "Crewed landing, July 20, 1969",
+    place: "Tranquility Base, Sea of Tranquility",
+    status: "Mirror panel still in use",
+    story: [
+      "Neil Armstrong and Buzz Aldrin spent about 21 hours on the surface and about two and a half hours walking outside. Then they flew home in the top half of their lander.",
+      "The bottom half stayed. So did a seismometer that listened for moonquakes for about three weeks, and a panel of 100 small mirrors aimed at Earth.",
+      "The mirrors never needed power. Scientists still fire lasers at them to measure the distance to the Moon. A robot got there first: Surveyor 5 landed on the same plain in September 1967, about 25 km away, and tested the soil with a chemical instrument."
+    ],
+    facts: [
+      ["Landed", "July 20, 1969"],
+      ["Walked on the Moon", "Neil Armstrong, Buzz Aldrin"],
+      ["Left behind", "Descent stage, seismometer, laser mirror panel"],
+      ["Mirrors", "100 corner cubes, each 3.8 cm wide"],
+      ["Why it matters", "The Moon drifts away from Earth about 3.8 cm every year, and these mirrors help measure it"]
+    ],
+    voice: { who: "Imagined voice of the mirror panel", text: "“I have no battery, no radio and no brain. A laser flashes from Earth and I send it straight back. That is my whole job, and I have been doing it for more than fifty years.”" },
+    src: ["apollo", "eos"]
+  },
+  {
+    id: "apollo12", world: "moon", kind: "crew", live: false, name: "Apollo 12 and Surveyor 3", lat: -3.01, lon: -23.42, nudge: [-3.5, 0],
+    kicker: "Crewed landing, Nov. 19, 1969",
+    place: "Ocean of Storms",
+    status: "Silent. Lander and robot sit side by side",
+    story: [
+      "Pete Conrad and Alan Bean aimed their lander at a robot. Surveyor 3 had landed in a crater in the Ocean of Storms in April 1967. Apollo 12 touched down about 600 feet (180 m) away, close enough to walk.",
+      "On their second moonwalk the astronauts cut off Surveyor 3’s TV camera, a soil scoop and some tubing. About 20 pounds (9 kg) of hardware flew home so engineers could see how metal, glass and paint had aged on the Moon.",
+      "The rest of Surveyor 3 is still there, parked next to the descent stage of the lander Intrepid. NASA’s Lunar Reconnaissance Orbiter photographed both from above in 2011."
+    ],
+    note: "Early reports said bacteria had survived inside the returned camera for 31 months on the Moon. Later studies found the germs most likely got in after the camera reached Earth.",
+    facts: [
+      ["Landed", "Nov. 19, 1969"],
+      ["Walked on the Moon", "Pete Conrad, Alan Bean"],
+      ["Surveyor 3", "Landed April 20, 1967. Worked until May 4, 1967"],
+      ["Brought home", "Camera, scoop and tubing, about 20 lb (9 kg)"],
+      ["Today", "Lander and robot sit side by side"]
+    ],
+    voice: { who: "Imagined voice of Surveyor 3", text: "“I took pictures and dug into the soil with my scoop. Then I went quiet. Two and a half years later, two people in white suits walked up and took my camera home.”" },
+    src: ["apollo", "space12", "lro", "linda"]
+  },
+  {
+    id: "apollo14", world: "moon", kind: "crew", live: true, name: "Apollo 14", lat: -3.65, lon: -17.47, nudge: [2, 0],
+    kicker: "Crewed landing, Feb. 5, 1971",
+    place: "Fra Mauro highlands",
+    status: "Mirror panel still in use",
+    story: [
+      "Alan Shepard and Edgar Mitchell landed in the Fra Mauro highlands in February 1971. Apollo 14 was the first mission to bring a hand cart. The astronauts pulled it behind them to carry tools and rocks.",
+      "The cart is still there, and NASA’s Lunar Reconnaissance Orbiter can see its tracks from above. The crew also left a panel of 100 laser mirrors that scientists still use."
+    ],
+    facts: [
+      ["Landed", "Feb. 5, 1971"],
+      ["Walked on the Moon", "Alan Shepard, Edgar Mitchell"],
+      ["Lander", "Antares"],
+      ["Left behind", "Descent stage, hand cart, experiments, mirror panel"]
+    ],
+    src: ["apollo", "lro", "eos"]
+  },
+  {
+    id: "apollo15", world: "moon", kind: "crew", live: true, name: "Apollo 15", lat: 26.13, lon: 3.63,
+    kicker: "Crewed landing, July 30, 1971",
+    place: "Hadley Rille and the Apennine mountains",
+    status: "Mirror panel still in use",
+    story: [
+      "Apollo 15 brought the first Lunar Roving Vehicle, a four-wheeled electric car. David Scott and James Irwin drove it far beyond walking distance from their lander.",
+      "The rover is parked there now. So is the biggest mirror panel on the Moon. Its 300 mirrors send back the strongest laser signal of any site."
+    ],
+    facts: [
+      ["Landed", "July 30, 1971"],
+      ["Walked on the Moon", "David Scott, James Irwin"],
+      ["Lander", "Falcon"],
+      ["Mirrors", "300 corner cubes, the strongest return of any site"],
+      ["Left behind", "Descent stage, Lunar Roving Vehicle, experiments"]
+    ],
+    src: ["apollo", "eos"]
+  },
+  {
+    id: "apollo16", world: "moon", kind: "crew", live: false, name: "Apollo 16", lat: -8.97, lon: 15.5,
+    kicker: "Crewed landing, April 20, 1972",
+    place: "Descartes highlands",
+    status: "Silent",
+    story: [
+      "John Young and Charles Duke landed in the Descartes highlands in April 1972. They drove the rover to rocks they could never have walked to.",
+      "Duke left a plastic-wrapped photo of his family on the surface. Apollo 16 also set up the first telescope operated from the Moon, a camera that took pictures in ultraviolet light."
+    ],
+    facts: [
+      ["Landed", "April 20, 1972 (U.S. time)"],
+      ["Walked on the Moon", "John Young, Charles Duke"],
+      ["Lander", "Orion"],
+      ["Left behind", "Descent stage, rover, family photo, experiments"]
+    ],
+    src: ["apollo", "lro"]
+  },
+  {
+    id: "apollo17", world: "moon", kind: "crew", live: false, name: "Apollo 17", lat: 20.19, lon: 30.77,
+    kicker: "Crewed landing, Dec. 11, 1972",
+    place: "Taurus-Littrow valley",
+    status: "Silent",
+    story: [
+      "Eugene Cernan and Harrison Schmitt landed in the Taurus-Littrow valley in December 1972. They were the last people to walk on the Moon.",
+      "Before leaving they fixed a plaque to the lander. It reads: “Here Man completed his first explorations of the Moon, December 1972 A.D. May the spirit of peace in which we came be reflected in the lives of all mankind.”",
+      "From orbit, NASA’s camera can pick out the descent stage of Challenger, halfway between the experiment site and the rover’s final parking place."
+    ],
+    facts: [
+      ["Landed", "Dec. 11, 1972"],
+      ["Walked on the Moon", "Eugene Cernan, Harrison Schmitt"],
+      ["Lander", "Challenger"],
+      ["Left behind", "Descent stage, rover, plaque, experiments"]
+    ],
+    src: ["apollo", "lro"]
+  },
+  {
+    id: "surveyor1", world: "moon", kind: "robot", live: false, name: "Surveyor 1", lat: -2.47, lon: -43.34,
+    kicker: "Robot lander, June 2, 1966",
+    place: "Ocean of Storms",
+    status: "Silent",
+    story: [
+      "Before Surveyor, nobody was sure the Moon’s dust was firm enough to land on. Surveyor 1 settled it on June 2, 1966, with a gentle landing on ground that held.",
+      "It was the first of five successful Surveyor landers. Together the five worked for about 17 months and sent home 87,000 photos. Those pictures helped NASA choose safe places for Apollo."
+    ],
+    facts: [
+      ["Landed", "June 2, 1966"],
+      ["The program", "Five of seven Surveyors landed softly"],
+      ["Together they sent", "87,000 photos in about 17 months"]
+    ],
+    src: ["linda", "nasa7"]
+  },
+  {
+    id: "surveyor6", world: "moon", kind: "robot", live: false, name: "Surveyor 6", lat: 0.47, lon: -1.44,
+    kicker: "Robot lander, Nov. 10, 1967",
+    place: "Sinus Medii, the middle of the Moon’s near side",
+    status: "Silent",
+    story: [
+      "Surveyor 6 landed in the middle of the Moon’s visible face in November 1967. Then NASA tried something new. On Nov. 17, controllers fired its engines for 2.5 seconds.",
+      "The lander rose 12 feet (3.7 m) and came down 8 feet (2.4 m) away. It was the first powered liftoff from another world, an engineering test to see if rocket engines could restart on the Moon."
+    ],
+    facts: [
+      ["Landed", "Nov. 10, 1967"],
+      ["The hop", "Nov. 17, 1967. Engines fired for 2.5 seconds"],
+      ["Height and distance", "Up 12 feet (3.7 m), 8 feet (2.4 m) west"],
+      ["Why", "To test restarting the engines on the Moon"]
+    ],
+    voice: { who: "Imagined voice of Surveyor 6", text: "“I fired my engines for two and a half seconds and jumped. It was the first time anything had lifted off from another world, and I only moved a few feet.”" },
+    src: ["nasa6"]
+  },
+  {
+    id: "surveyor7", world: "moon", kind: "robot", live: false, name: "Surveyor 7", lat: -40.88, lon: -11.51,
+    kicker: "Robot lander, Jan. 10, 1968",
+    place: "Next to Tycho crater",
+    status: "Silent since Feb. 21, 1968",
+    story: [
+      "Surveyor 7 was the last of the series. It landed on a rocky highland near the rim of Tycho crater, far from the flat plains the others had visited. It survived one 14-day lunar night, but battery damage cut its second day short.",
+      "While it worked, its camera spotted two laser beams from observatories on Earth. It was a test for the mirrors Apollo crews would leave on the Moon. Plans to visit Surveyor 7 on a later Apollo mission were dropped because of budget cuts."
+    ],
+    facts: [
+      ["Landed", "Jan. 10, 1968"],
+      ["Pictures", "About 21,000"],
+      ["Mission ended", "Feb. 21, 1968"],
+      ["Soil", "Less iron than at the other sites"]
+    ],
+    src: ["nasa7"]
+  },
+
+  /* ---------- MARS ---------- */
+  {
+    id: "viking1", world: "mars", live: false, name: "Viking 1", lat: 22.5, lon: -48, side: "left",
+    kicker: "Lander, July 20, 1976",
+    place: "Chryse Planitia",
+    status: "Silent since November 1982",
+    story: [
+      "Viking 1 was the first American lander to work on Mars. It touched down on July 20, 1976 and spent about six years sending pictures and weather reports.",
+      "Engineers lost contact in November 1982. They kept sending commands built from studies of possible failures, but nothing answered.",
+      "NASA renamed the lander the Thomas A. Mutch Memorial Station, after the scientist who led its camera team."
+    ],
+    facts: [
+      ["Landed", "July 20, 1976"],
+      ["Worked for", "About six years"],
+      ["Last contact", "November 1982"],
+      ["Renamed", "Thomas A. Mutch Memorial Station"]
+    ],
+    src: ["viking"]
+  },
+  {
+    id: "viking2", world: "mars", live: false, name: "Viking 2", lat: 47.7, lon: 134.3,
+    kicker: "Lander, Sept. 3, 1976",
+    place: "Utopia Planitia",
+    status: "Silent since 1980",
+    story: [
+      "Viking 2 landed on the far side of the planet from Viking 1, on a northern plain called Utopia Planitia. It worked until 1980.",
+      "Together the two Viking landers gave scientists their first long look at the surface of Mars. They are still in the places where they stopped."
+    ],
+    facts: [
+      ["Landed", "Sept. 3, 1976"],
+      ["Last contact", "1980"],
+      ["Sister lander", "Viking 1, on the other side of Mars"]
+    ],
+    src: ["viking"]
+  },
+  {
+    id: "pathfinder", world: "mars", live: false, name: "Pathfinder and Sojourner", lat: 19.1, lon: -33.2,
+    kicker: "Lander and first rover, July 4, 1997",
+    place: "Ares Vallis",
+    status: "Silent since Sept. 27, 1997",
+    story: [
+      "Mars Pathfinder landed on July 4, 1997. It carried a six-wheeled rover about the size of a microwave oven, named Sojourner.",
+      "NASA planned for the lander to work 30 days and the rover seven. The last full set of data arrived on Sept. 27, 1997, after 83 Martian days. The rover had worked 12 times longer than planned.",
+      "Between them the two machines sent home more than 16,000 pictures from the lander and 550 from the rover."
+    ],
+    facts: [
+      ["Landed", "July 4, 1997"],
+      ["Built to last", "Lander 30 days, rover 7 days"],
+      ["Last data", "Sept. 27, 1997, Martian day 83"],
+      ["Pictures", "16,000+ from the lander, 550 from the rover"]
+    ],
+    src: ["pathf"]
+  },
+  {
+    id: "spirit", world: "mars", live: false, name: "Spirit", lat: -14.57, lon: 175.47, side: "left",
+    kicker: "Rover, Jan. 3, 2004",
+    place: "Gusev crater, now called Columbia Memorial Station",
+    status: "Silent since March 22, 2010",
+    story: [
+      "Spirit was built to work for 90 Martian days. It kept driving for more than six years and covered 4.8 miles (7.73 km).",
+      "In 2006 it found coarse, bulbous grains at Home Plate that point to an ancient explosion. In 2007 a wheel dragging through the soil scraped open a patch of nearly pure silica, a sign of hot springs or steam vents on ancient Mars.",
+      "On May 1, 2009 Spirit became stuck in soft soil beside Home Plate. In November that year a wheel stopped working. NASA could not regain contact after March 22, 2010, and ended its recovery effort on May 25, 2011, after sending more than 1,300 commands."
+    ],
+    facts: [
+      ["Landed", "Jan. 3, 2004 (Pacific time)"],
+      ["Built to last", "90 Martian days"],
+      ["Distance driven", "4.8 miles (7.73 km)"],
+      ["Stuck in soft soil", "May 1, 2009"],
+      ["Last contact", "March 22, 2010"],
+      ["Recovery ended", "May 25, 2011"]
+    ],
+    voice: { who: "Imagined voice of Spirit", text: "“My wheels are buried in soft soil and I cannot drive anymore. I can still look around and listen. Please keep calling.”" },
+    src: ["spirit"]
+  },
+  {
+    id: "opportunity", world: "mars", live: false, name: "Opportunity", lat: -1.95, lon: -5.53,
+    kicker: "Rover, Jan. 24, 2004",
+    place: "Meridiani Planum, ending in Perseverance Valley",
+    status: "Silent since June 10, 2018",
+    story: [
+      "Opportunity was built to work for 90 Martian days. It worked for about 14 years and drove more than 28 miles (45 km). That was a record for any vehicle on another world, until Perseverance passed it on Oct. 11, 2026.",
+      "In June 2018 a Mars-wide dust storm covered the rover’s location and blocked the sunlight its solar panels needed. NASA received its final communication on June 10. Engineers sent commands and listened for eight months.",
+      "On Feb. 13, 2019 NASA declared the mission complete. Opportunity’s last parking place is on the western rim of Perseverance Valley."
+    ],
+    note: "A reporter once turned the rover’s final data into the line “My battery is low and it’s getting dark.” It is a poetic reading of the numbers, not words the rover wrote.",
+    facts: [
+      ["Landed", "Jan. 24, 2004"],
+      ["Built to last", "90 Martian days"],
+      ["Distance driven", "28.06 miles (45.16 km)"],
+      ["Last signal", "June 10, 2018"],
+      ["Declared complete", "Feb. 13, 2019"],
+      ["Resting place", "Western rim of Perseverance Valley"]
+    ],
+    voice: { who: "Imagined voice of Opportunity", text: "“The sky is turning brown. My panels are getting almost no light. I send what I can. Then I wait for the wind to sweep me clean.”" },
+    src: ["jplopp", "perse"]
+  },
+  {
+    id: "phoenix", world: "mars", live: false, name: "Phoenix", lat: 68.2, lon: -125.7,
+    kicker: "Lander, May 25, 2008",
+    place: "An arctic plain in northern Mars",
+    status: "Silent since Nov. 2, 2008",
+    story: [
+      "Phoenix landed farther north than any earlier spacecraft on Mars. NASA planned for it to work three months. It worked more than five.",
+      "It confirmed water ice just under the soil, discovered a salt called perchlorate and watched snow fall from clouds.",
+      "As northern autumn came, the Sun sank lower and the sky grew dusty and cloudy. The solar panels could no longer charge the batteries. Engineers last heard from Phoenix on Nov. 2, 2008."
+    ],
+    facts: [
+      ["Landed", "May 25, 2008"],
+      ["Built to last", "About three months"],
+      ["Worked for", "152 Martian days"],
+      ["Last signal", "Nov. 2, 2008"],
+      ["Found", "Water ice, perchlorate salt, falling snow"]
+    ],
+    voice: { who: "Imagined voice of Phoenix", text: "“I am sitting on frozen ground and the Sun is getting low. I found the ice I came for. Now I need more light than the sky can give me.”" },
+    src: ["phoenix"]
+  },
+  {
+    id: "insight", world: "mars", live: false, name: "InSight", lat: 4.5, lon: 135.6,
+    kicker: "Lander, Nov. 26, 2018",
+    place: "Elysium Planitia",
+    status: "Silent since Dec. 18, 2022",
+    story: [
+      "InSight did not drive. It sat still and listened. It was built to study the inside of Mars, and it measured quakes, weather and the planet’s faint magnetic field.",
+      "From its data, scientists learned that Mars has layers inside and a liquid core.",
+      "Its power had been falling for months. On Dec. 18, 2022 it did not answer a call from Earth, and NASA assumed its work was over."
+    ],
+    facts: [
+      ["Launched", "May 5, 2018"],
+      ["Landed", "Nov. 26, 2018"],
+      ["Last contact", "Dec. 18, 2022, no answer"],
+      ["Measured", "Quakes, interior layers, liquid core, weather"]
+    ],
+    voice: { who: "Imagined voice of InSight", text: "“I never drove anywhere. I sat still and listened to Mars shake, and I wrote down every tremor.”" },
+    src: ["insight"]
+  },
+  {
+    id: "curiosity", world: "mars", live: true, name: "Curiosity", lat: -4.59, lon: 137.44,
+    kicker: "Rover, August 2012",
+    place: "Gale Crater and Mount Sharp",
+    status: "Still working",
+    story: [
+      "Curiosity landed in Gale Crater in August 2012. It was built to work for one Martian year, which is 687 Earth days. It has now worked more than seven times that long.",
+      "Soon after landing it showed that a place called Yellowknife Bay could have supported life billions of years ago.",
+      "Since then it has been climbing Mount Sharp, a mountain more than 3 miles (5 km) tall that rises from the middle of the crater."
+    ],
+    facts: [
+      ["Landed", "Night of Aug. 5, 2012 (U.S. time)"],
+      ["Built to last", "One Martian year, 687 Earth days"],
+      ["Exploring", "Mount Sharp in Gale Crater"],
+      ["Found", "An ancient place where life could have lived"]
+    ],
+    src: ["curio"]
+  },
+  {
+    id: "perseverance", world: "mars", live: true, name: "Perseverance", lat: 18.44, lon: 77.45,
+    kicker: "Rover, February 2021",
+    place: "Jezero Crater",
+    status: "Still working",
+    story: [
+      "Perseverance landed in Jezero Crater in February 2021. On Oct. 11, 2026 its odometer read 28.10 miles (45.22 km). That passed Opportunity’s record of 28.06 miles (45.16 km) for the farthest drive on another world.",
+      "It has collected 29 rock and soil samples. Its extended mission takes it along the crater rim, so the record grows every time it drives.",
+      "On the way down it left hardware behind: a parachute, a backshell and a descent stage. Scroll down to see where they ended up."
+    ],
+    facts: [
+      ["Landed", "Feb. 18, 2021"],
+      ["Odometer", "28.10 miles (45.22 km) on Oct. 11, 2026"],
+      ["Samples", "29 rock and soil samples"],
+      ["Record", "Passed Opportunity on Oct. 11, 2026"]
+    ],
+    src: ["perse", "edl"]
+  },
+  {
+    id: "ingenuity", world: "mars", live: false, name: "Ingenuity", lat: 18.44, lon: 77.45, nudge: [-7, -5], side: "left",
+    kicker: "Helicopter, April 2021 to January 2024",
+    place: "Jezero Crater",
+    status: "Grounded since Jan. 18, 2024",
+    story: [
+      "Ingenuity was a test. NASA planned up to five short flights over 30 days to see if a helicopter could fly in Mars’s thin air. It made 72 flights over almost three years and spent more than two hours in the air. On April 19, 2021 it made the first powered, controlled flight on another planet.",
+      "On its 72nd flight, Jan. 18, 2024, one or more rotor blades were damaged during landing. NASA ended the mission. At that time the helicopter was still upright and could still talk to controllers, but it could not fly.",
+      "It also did a second job. On April 19, 2022 it photographed Perseverance’s discarded parachute and backshell from the air."
+    ],
+    facts: [
+      ["First flight", "April 19, 2021"],
+      ["Planned", "Up to 5 flights in 30 days"],
+      ["Flew", "72 flights, more than two hours in the air"],
+      ["Last flight", "Jan. 18, 2024"]
+    ],
+    voice: { who: "Imagined voice of Ingenuity", text: "“They hired me for five flights. I flew seventy-two. My last landing bent my blades, so now I stay on the ground and watch the dust.”" },
+    src: ["ingen", "edl"]
+  },
+
+  /* ---------- DEEP SPACE ---------- */
+  {
+    id: "voyager1", world: "deep", live: true, name: "Voyager 1",
+    kicker: "Probe, launched Sept. 5, 1977",
+    place: "Interstellar space, leaving the solar system",
+    status: "Still working, with most instruments switched off",
+    story: [
+      "Voyager 1 flew past Jupiter in 1979 and Saturn in 1980. In 2012 it became the first human-made object to reach interstellar space, the space between the stars.",
+      "Its power drops by about 4 watts a year as its plutonium power source ages, so engineers keep switching things off. On April 17, 2026 they turned off another instrument, the Low-energy Charged Particles experiment, to give the spacecraft about a year of extra life.",
+      "On Nov. 18, 2026 Voyager 1 reaches one light-day from Earth. That is about 16.1 billion miles (25.9 billion km)."
+    ],
+    facts: [
+      ["Launched", "Sept. 5, 1977"],
+      ["Jupiter and Saturn", "1979 and 1980"],
+      ["Interstellar space", "2012"],
+      ["Power loss", "About 4 watts every year"],
+      ["One light-day", "Nov. 18, 2026 at 06:16 UTC"],
+      ["Carries", "A gold record of sounds and pictures from Earth"]
+    ],
+    voice: { who: "Imagined voice of Voyager 1", text: "“A message from Earth takes a full day to reach me. My answer takes another day to get back. I am the farthest thing people have ever made, and I am still sending numbers home.”" },
+    src: ["voylight", "voyblog"]
+  },
+  {
+    id: "voyager2", world: "deep", live: true, name: "Voyager 2",
+    kicker: "Probe, launched Aug. 20, 1977",
+    place: "Interstellar space",
+    status: "Still working, with a few instruments",
+    story: [
+      "Voyager 2 is the only spacecraft that has visited Uranus (1986) and Neptune (1989). It entered interstellar space in November 2018.",
+      "In early August 2026 it was about 21.4 billion km (13.3 billion miles) from Earth. NASA says it will reach one light-day in November 2035.",
+      "Engineers keep finding ways to save power. In August 2026 they swapped two devices on Voyager 2 for lower-power ones so the spacecraft stays warm enough to work."
+    ],
+    facts: [
+      ["Launched", "Aug. 20, 1977"],
+      ["Planets visited", "Jupiter, Saturn, Uranus, Neptune"],
+      ["Distance, early Aug. 2026", "About 21.4 billion km"],
+      ["One light-day", "November 2035"]
+    ],
+    src: ["voy2", "voylight"]
+  },
+  {
+    id: "pioneer10", world: "deep", live: false, name: "Pioneer 10",
+    kicker: "Probe, launched March 2, 1972",
+    place: "Heading toward the star Aldebaran",
+    status: "Silent since Jan. 23, 2003",
+    story: [
+      "Pioneer 10 was the first spacecraft to visit Jupiter. It arrived in December 1973. NASA last heard from it on Jan. 23, 2003, and a try in 2006 got no answer.",
+      "It is still travelling, generally toward the red star Aldebaran in the constellation Taurus. It will take more than two million years to get there.",
+      "It carries a small metal plaque that shows a man and a woman and where Earth sits in the galaxy, in case anyone ever finds it."
+    ],
+    facts: [
+      ["Launched", "March 2, 1972"],
+      ["At Jupiter", "December 1973"],
+      ["Last signal", "Jan. 23, 2003"],
+      ["Travel time to Aldebaran", "More than 2 million years"]
+    ],
+    voice: { who: "Imagined voice of Pioneer 10", text: "“My radio is silent, but I still have a message. A man, a woman and a map of where I came from. I am in no hurry.”" },
+    src: ["pioneer"]
+  },
+  {
+    id: "pioneer11", world: "deep", live: false, name: "Pioneer 11",
+    kicker: "Probe, launched April 5, 1973",
+    place: "Heading toward the constellation Aquila",
+    status: "Silent since September 1995",
+    story: [
+      "Pioneer 11 gave the first close-up views of Saturn. It passed within 13,000 miles (21,000 km) of the planet. NASA received its last transmission in September 1995.",
+      "It is heading toward the constellation Aquila and will pass near it in about four million years. Like Pioneer 10, it carries a plaque from Earth."
+    ],
+    facts: [
+      ["Launched", "April 5, 1973"],
+      ["At Saturn", "Passed within 13,000 miles (21,000 km)"],
+      ["Last transmission", "September 1995"],
+      ["Travel time to Aquila", "About 4 million years"]
+    ],
+    src: ["pioneer"]
+  },
+  {
+    id: "dawn", world: "deep", live: false, name: "Dawn",
+    kicker: "Probe, launched 2007",
+    place: "In orbit around the dwarf planet Ceres",
+    status: "Silent since Nov. 1, 2018",
+    story: [
+      "Dawn was the first spacecraft to orbit two different worlds in the asteroid belt. It reached Vesta in 2011 and Ceres in 2015.",
+      "It ran out of hydrazine, the fuel that points its antenna at Earth and its solar panels at the Sun. NASA announced the end of the mission on Nov. 1, 2018, after Dawn missed two scheduled calls.",
+      "Dawn will not fall. NASA is more than 99 percent sure it will keep orbiting Ceres for at least 50 years. NASA chose not to crash it, because scientists want to keep Ceres clean for future studies of chemistry that could lead to life."
+    ],
+    facts: [
+      ["Launched", "2007"],
+      ["Visited", "Vesta (2011), Ceres (2015)"],
+      ["Distance travelled", "About 4.3 billion miles (6.9 billion km)"],
+      ["Orbit", "At least 20 years, more than 99% sure for 50"]
+    ],
+    src: ["dawn"]
+  },
+  {
+    id: "near", world: "deep", live: false, name: "NEAR Shoemaker",
+    kicker: "Probe, launched Feb. 17, 1996",
+    place: "On the asteroid Eros",
+    status: "Silent since Feb. 28, 2001",
+    story: [
+      "NEAR Shoemaker became the first spacecraft to orbit an asteroid in February 2000. A year later its engineers tried something it was not designed for. On Feb. 12, 2001 it landed on Eros, a potato-shaped rock 21 miles (34 km) long.",
+      "NEAR was built as an orbiter, but it survived the touchdown and kept sending data until Feb. 28, 2001. It still sits on Eros."
+    ],
+    facts: [
+      ["Launched", "Feb. 17, 1996"],
+      ["Orbited Eros", "Feb. 14, 2000"],
+      ["Landed", "Feb. 12, 2001"],
+      ["Last data", "Feb. 28, 2001"],
+      ["Eros", "21 miles (34 km) long"]
+    ],
+    voice: { who: "Imagined voice of NEAR Shoemaker", text: "“I was built to circle, not to land. But the engineers wanted a closer look, so I came down slowly and kept talking.”" },
+    src: ["near"]
+  }
+];
+
+const QUIZ = [
+  { q: "Until October 2026, which robot held the record for the farthest drive on another world?",
+    a: ["Spirit", "Opportunity", "Curiosity", "Sojourner"], c: 1,
+    why: "Opportunity drove 28.06 miles (45.16 km). Perseverance passed it on Oct. 11, 2026." },
+  { q: "How long was Opportunity built to work?",
+    a: ["90 Martian days", "One Martian year", "5 years", "14 years"], c: 0,
+    why: "NASA planned for 90 Martian days, about three months. Opportunity worked for about 14 years." },
+  { q: "How close to Surveyor 3 did Apollo 12 land?",
+    a: ["About 6 miles (10 km)", "About 600 feet (180 m)", "About 600 miles (1,000 km)", "Right on top of it"], c: 1,
+    why: "It was a short walk. The astronauts cut off the TV camera and brought about 20 pounds (9 kg) of parts home." },
+  { q: "What do the Apollo 11, 14 and 15 mirror panels do today?",
+    a: ["Power the old landers", "Send TV pictures", "Reflect laser beams sent from Earth", "Record moonquakes"], c: 2,
+    why: "Scientists fire lasers at the mirrors and time the return. That measures the distance to the Moon to about 1 millimeter." },
+  { q: "Why did Ingenuity stop flying?",
+    a: ["Its battery ran empty", "A dust storm buried it", "Rotor blades were damaged landing on flight 72", "NASA lost its radio signal on flight 5"], c: 2,
+    why: "Images from its 72nd flight, on Jan. 18, 2024, showed rotor blade damage after landing. It was meant to fly five times." },
+  { q: "When Voyager 1 reaches one light-day from Earth, how long will a radio message take to get there?",
+    a: ["About 4 minutes", "About 1 hour", "24 hours", "One week"], c: 2,
+    why: "A light-day is the distance light travels in a day, so a message needs exactly one day. That is about 25.9 billion km." },
+  { q: "What will Dawn do now that it has run out of fuel?",
+    a: ["Crash into Ceres", "Return to Earth", "Fly on to Jupiter", "Keep orbiting Ceres for decades"], c: 3,
+    why: "NASA is more than 99 percent sure Dawn will stay in orbit around Ceres for at least 50 years." },
+  { q: "What did NEAR Shoemaker do in February 2001 that it was not designed to do?",
+    a: ["Land on an asteroid", "Return a sample to Earth", "Land on Mars", "Fly past Jupiter"], c: 0,
+    why: "It landed on the asteroid Eros and kept sending data until Feb. 28, 2001." },
+  { q: "Which star is Pioneer 10 generally heading toward?",
+    a: ["Sirius", "Polaris", "Aldebaran", "Proxima Centauri"], c: 2,
+    why: "Pioneer 10 is heading generally toward Aldebaran. It will take more than two million years to get there." },
+  { q: "What happened to the Spirit rover on May 1, 2009?",
+    a: ["It fell into a crater", "It got stuck in soft soil", "It lost its camera", "A dust storm covered it"], c: 1,
+    why: "Spirit became stuck in soft soil beside Home Plate. NASA last heard from it on March 22, 2010." }
+];
+
+(function () {
+  "use strict";
+
+  /* ---------- helpers ---------- */
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const reduceMotion = () => !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const BY = {};
+  MACHINES.forEach((m) => { BY[m.id] = m; });
+  const OF = (w) => MACHINES.filter((m) => m.world === w);
+
+  function rng(seed) {
+    let s = seed >>> 0;
+    return function () {
+      s = (s + 0x6d2b79f5) >>> 0;
+      let t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function setupCanvas(cv, w, h) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.max(1, Math.round(w * dpr));
+    cv.height = Math.max(1, Math.round(h * dpr));
+    const ctx = cv.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return ctx;
+  }
+  const clamp01 = (v) => Math.max(0, Math.min(1, v));
+  const smooth = (a, b, v) => { const t = clamp01((v - a) / (b - a)); return t * t * (3 - 2 * t); };
+
+  /* ---------- hero starfield ---------- */
+  function drawStars() {
+    const cv = $("#stars");
+    if (!cv) return;
+    const r = cv.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    const ctx = setupCanvas(cv, r.width, r.height);
+    const R = rng(11);
+    const n = Math.round((r.width * r.height) / 2400);
+    for (let i = 0; i < n; i++) {
+      const x = R() * r.width;
+      const y = Math.pow(R(), 1.3) * r.height;
+      const s = R();
+      const a = 0.25 + R() * 0.6;
+      const rad = s > 0.975 ? 1.5 : s > 0.85 ? 1.0 : 0.6;
+      ctx.fillStyle = s > 0.9 ? "rgba(255,236,205," + a + ")" : s > 0.5 ? "rgba(210,226,255," + a + ")" : "rgba(232,228,218," + a * 0.8 + ")";
+      ctx.beginPath();
+      ctx.arc(x, y, rad, 0, 6.2832);
+      ctx.fill();
+      if (s > 0.985) {
+        const g = ctx.createRadialGradient(x, y, 0, x, y, 7);
+        g.addColorStop(0, "rgba(255,240,215,.35)");
+        g.addColorStop(1, "rgba(255,240,215,0)");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(x, y, 7, 0, 6.2832);
+        ctx.fill();
+      }
+    }
+  }
+
+  /* ---------- dossier ---------- */
+  function dossierHTML(m) {
+    const facts = m.facts.map((f) => "<div><dt>" + esc(f[0]) + "</dt><dd>" + f[1] + "</dd></div>").join("");
+    const voice = m.voice ? '<figure class="voice"><figcaption>' + esc(m.voice.who) + "</figcaption><blockquote>" + m.voice.text + "</blockquote></figure>" : "";
+    const note = m.note ? '<p class="note"><b>Accuracy note.</b> ' + m.note + "</p>" : "";
+    const src = m.src.map((k) => '<a href="' + SRC[k][1] + '" target="_blank" rel="noopener">' + esc(SRC[k][0]) + "</a>").join("");
+    return (
+      '<p class="kicker">' + esc(m.kicker) + "</p>" +
+      "<h3>" + esc(m.name) + "</h3>" +
+      '<p class="place">' + esc(m.place) + "</p>" +
+      '<p class="status' + (m.live ? " st-live" : "") + '"><span class="dot' + (m.live ? " live" : "") + '"></span>' + esc(m.status) + "</p>" +
+      '<div class="body"><div class="story prose">' + m.story.map((p) => "<p>" + p + "</p>").join("") + note + "</div>" +
+      '<div class="side"><dl class="facts">' + facts + "</dl>" + voice + '<p class="src"><span>Sources</span>' + src + "</p></div></div>"
+    );
+  }
+
+  const current = {};
+  function select(id, userClick) {
+    const m = BY[id];
+    if (!m) return;
+    current[m.world] = id;
+    $$('.pin[data-world="' + m.world + '"]').forEach((b) => b.setAttribute("aria-pressed", b.dataset.id === id ? "true" : "false"));
+    $$("#deep-chips .chip").forEach((b) => b.setAttribute("aria-pressed", b.dataset.id === id ? "true" : "false"));
+    const host = $("#" + m.world + "-dossier");
+    host.innerHTML = dossierHTML(m);
+    if (userClick) ensureVisible(host);
+  }
+  function ensureVisible(el) {
+    const top = el.getBoundingClientRect().top;
+    if (top > window.innerHeight * 0.62 || top < 40) {
+      window.scrollTo({ top: window.scrollY + top - 84, behavior: reduceMotion() ? "auto" : "smooth" });
+    }
+  }
+
+  /* ---------- pins ---------- */
+  function orthographic(lat, lon) {
+    const p = (lat * Math.PI) / 180, l = (lon * Math.PI) / 180;
+    return { x: Math.cos(p) * Math.sin(l), y: Math.sin(p), z: Math.cos(p) * Math.cos(l) };
+  }
+  function buildPin(m, left, top) {
+    const b = document.createElement("button");
+    b.type = "button";
+    const cls = m.world === "moon" ? m.kind : "silent";
+    b.className = "pin " + cls + (m.live ? " live" : "");
+    if (m.side === "left") b.setAttribute("data-side", "left");
+    b.dataset.id = m.id;
+    b.dataset.world = m.world;
+    b.style.left = left + "%";
+    b.style.top = top + "%";
+    b.setAttribute("aria-pressed", "false");
+    const kind = m.world === "moon" ? (m.kind === "crew" ? "crewed landing" : "robot lander") : "Mars";
+    b.setAttribute("aria-label", m.name + ", " + kind + ", " + (m.live ? "still working" : "silent"));
+    b.innerHTML = '<i></i><span class="pin-name">' + esc(m.name) + "</span>";
+    b.addEventListener("click", () => select(m.id, true));
+    return b;
+  }
+  function buildMoonPins() {
+    const host = $("#moon-pins");
+    OF("moon").forEach((m) => {
+      const n = m.nudge || [0, 0];
+      const p = orthographic(m.lat + n[1], m.lon + n[0]);
+      host.appendChild(buildPin(m, (0.5 + 0.46 * p.x) * 100, (0.5 - 0.46 * p.y) * 100));
+    });
+  }
+  function buildMarsPins() {
+    const host = $("#mars-pins");
+    OF("mars").forEach((m) => {
+      const n = m.nudge || [0, 0];
+      host.appendChild(buildPin(m, ((m.lon + n[0] + 180) / 360) * 100, ((90 - (m.lat + n[1])) / 180) * 100));
+    });
+    const feats = [["Olympus Mons", 18.6, -134], ["Tharsis", -2, -110], ["Valles Marineris", -17, -62], ["Hellas Planitia", -45, 70.5]];
+    $("#mars-feats").innerHTML = feats
+      .map((f) => '<span class="feat" style="left:' + (((f[2] + 180) / 360) * 100).toFixed(2) + "%;top:" + (((90 - f[1]) / 180) * 100).toFixed(2) + '%">' + esc(f[0]) + "</span>")
+      .join("");
+  }
+
+  /* ---------- Moon picture ---------- */
+  const MARIA = [
+    [33, -16, 12, 17], [15, -54, 20, 14], [28, 18, 8, 9], [8, 31, 9, 12], [17, 59, 6, 8], [-7, 52, 7, 8],
+    [-15, 34, 4, 5], [-21, -16, 8, 12], [-24, -39, 5, 6], [57, 0, 3, 22], [13, 3.5, 4, 5], [-10, -23, 3, 5], [7, -30, 6, 8]
+  ];
+  function drawMoon() {
+    const cv = $("#moon-canvas");
+    if (!cv) return;
+    const S = cv.parentElement.clientWidth;
+    if (!S) return;
+    const ctx = setupCanvas(cv, S, S);
+    const cx = S / 2, cy = S / 2, R = S * 0.46;
+    ctx.clearRect(0, 0, S, S);
+    const halo = ctx.createRadialGradient(cx, cy, R * 0.92, cx, cy, R * 1.12);
+    halo.addColorStop(0, "rgba(185,201,222,.20)");
+    halo.addColorStop(1, "rgba(185,201,222,0)");
+    ctx.fillStyle = halo;
+    ctx.beginPath(); ctx.arc(cx, cy, R * 1.12, 0, 6.2832); ctx.fill();
+
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832); ctx.clip();
+    const base = ctx.createRadialGradient(cx - R * 0.25, cy - R * 0.3, R * 0.1, cx, cy, R);
+    base.addColorStop(0, "#cfd6df"); base.addColorStop(1, "#9aa5b5");
+    ctx.fillStyle = base; ctx.fillRect(0, 0, S, S);
+
+    // dark plains (maria)
+    const blurOk = "filter" in ctx;
+    if (blurOk) ctx.filter = "blur(" + Math.max(1, S / 260).toFixed(1) + "px)";
+    MARIA.forEach((mr, i) => {
+      const Rn = rng(100 + i);
+      const pts = [];
+      const N = 26;
+      for (let k = 0; k < N; k++) {
+        const t = (k / N) * 6.2832;
+        const f = 0.82 + Rn() * 0.36;
+        const la = mr[0] + mr[2] * f * Math.sin(t);
+        const lo = mr[1] + (mr[3] * f * Math.cos(t)) / Math.max(0.35, Math.cos((mr[0] * Math.PI) / 180));
+        const p = orthographic(la, lo);
+        pts.push([cx + R * p.x, cy - R * p.y]);
+      }
+      ctx.beginPath();
+      ctx.moveTo((pts[0][0] + pts[N - 1][0]) / 2, (pts[0][1] + pts[N - 1][1]) / 2);
+      for (let k = 0; k < N; k++) {
+        const a = pts[k], b = pts[(k + 1) % N];
+        ctx.quadraticCurveTo(a[0], a[1], (a[0] + b[0]) / 2, (a[1] + b[1]) / 2);
+      }
+      ctx.closePath();
+      ctx.fillStyle = "rgba(78,90,110,.62)";
+      ctx.fill();
+    });
+    if (blurOk) ctx.filter = "none";
+
+    // craters
+    const Rc = rng(7);
+    for (let i = 0; i < 280; i++) {
+      const lat = (Math.asin(2 * Rc() - 1) * 180) / Math.PI;
+      const lon = Rc() * 180 - 90;
+      const p = orthographic(lat, lon);
+      if (p.z < 0.12) continue;
+      const r = (0.004 + Math.pow(Rc(), 3) * 0.03) * R * (0.4 + 0.6 * p.z);
+      const x = cx + R * p.x, y = cy - R * p.y;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832);
+      ctx.fillStyle = "rgba(60,72,92,.14)"; ctx.fill();
+      ctx.lineWidth = Math.max(0.5, r * 0.18);
+      ctx.strokeStyle = "rgba(255,255,255,.16)";
+      ctx.beginPath(); ctx.arc(x - r * 0.1, y - r * 0.1, r, 3.5, 5.9); ctx.stroke();
+    }
+
+    // bright young craters and Tycho's rays
+    const bright = [[-43.3, -11.4, 0.034], [9.6, -20, 0.028], [8.1, -38, 0.02], [23.7, -47.4, 0.022]];
+    const tycho = orthographic(-43.3, -11.4);
+    const tx = cx + R * tycho.x, ty = cy - R * tycho.y;
+    const Rr = rng(31);
+    ctx.lineCap = "round";
+    for (let i = 0; i < 16; i++) {
+      const ang = Rr() * 6.2832, len = R * (0.35 + Rr() * 0.7);
+      ctx.strokeStyle = "rgba(255,255,255," + (0.07 + Rr() * 0.08) + ")";
+      ctx.lineWidth = Math.max(0.6, S / 420);
+      ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tx + Math.cos(ang) * len, ty + Math.sin(ang) * len); ctx.stroke();
+    }
+    bright.forEach((b) => {
+      const p = orthographic(b[0], b[1]);
+      const x = cx + R * p.x, y = cy - R * p.y, rr = R * b[2];
+      const g = ctx.createRadialGradient(x, y, 0, x, y, rr * 2.2);
+      g.addColorStop(0, "rgba(255,255,255,.85)");
+      g.addColorStop(0.35, "rgba(255,255,255,.35)");
+      g.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(x, y, rr * 2.2, 0, 6.2832); ctx.fill();
+    });
+
+    // sphere shading
+    const sh = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.35, R * 0.2, cx, cy, R * 1.05);
+    sh.addColorStop(0, "rgba(6,10,20,0)");
+    sh.addColorStop(0.7, "rgba(6,10,20,.2)");
+    sh.addColorStop(1, "rgba(6,10,20,.66)");
+    ctx.fillStyle = sh; ctx.fillRect(0, 0, S, S);
+    ctx.restore();
+    ctx.strokeStyle = "rgba(185,201,222,.35)";
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832); ctx.stroke();
+  }
+
+  /* ---------- Mars picture ---------- */
+  function makeNoise(seed) {
+    const Rn = rng(seed), N = 256, g = new Float32Array(N * N);
+    for (let i = 0; i < N * N; i++) g[i] = Rn();
+    return function (x, y) {
+      const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+      const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+      const a = g[((yi & 255) << 8) | (xi & 255)], b = g[((yi & 255) << 8) | ((xi + 1) & 255)];
+      const c = g[(((yi + 1) & 255) << 8) | (xi & 255)], d = g[(((yi + 1) & 255) << 8) | ((xi + 1) & 255)];
+      return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+    };
+  }
+  function fbm(n, x, y) {
+    let s = 0, a = 0.5, f = 1;
+    for (let i = 0; i < 6; i++) { s += a * n(x * f, y * f); f *= 2; a *= 0.55; }
+    return s / 1.1;
+  }
+  const RAMP = [[0, 70, 42, 32], [0.3, 112, 66, 44], [0.55, 160, 94, 60], [0.8, 197, 137, 96], [1, 224, 178, 136]];
+  function ramp(e) {
+    e = clamp01(e);
+    for (let i = 1; i < RAMP.length; i++) {
+      if (e <= RAMP[i][0]) {
+        const a = RAMP[i - 1], b = RAMP[i], t = (e - a[0]) / (b[0] - a[0]);
+        return [a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t, a[3] + (b[3] - a[3]) * t];
+      }
+    }
+    return [224, 178, 136];
+  }
+  const gauss = (v, c, s) => Math.exp(-Math.pow((v - c) / s, 2));
+  function segDist(px, py, ax, ay, bx, by) {
+    const dx = bx - ax, dy = by - ay, t = clamp01(((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy));
+    return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+  }
+  function drawMars() {
+    const cv = $("#mars-canvas");
+    if (!cv) return;
+    const W = cv.parentElement.clientWidth, H = cv.parentElement.clientHeight;
+    if (!W || !H) return;
+    const ctx = setupCanvas(cv, W, H);
+    const w = 720, h = 360, off = document.createElement("canvas");
+    off.width = w; off.height = h;
+    const octx = off.getContext("2d"), img = octx.createImageData(w, h), noise = makeNoise(5);
+    for (let y = 0; y < h; y++) {
+      const lat = 90 - ((y + 0.5) / h) * 180;
+      for (let x = 0; x < w; x++) {
+        const lon = -180 + ((x + 0.5) / w) * 360;
+        let e = fbm(noise, x / 44, y / 44) * 0.55 + 0.3;
+        e -= 0.26 * smooth(-10, 40, lat);                      // northern lowlands
+        e += 0.5 * gauss(lon, -105, 20) * gauss(lat, 2, 16);   // Tharsis bulge
+        e += 0.5 * gauss(lon, -134, 4.5) * gauss(lat, 18.6, 4.5); // Olympus Mons
+        e += 0.3 * gauss(lon, 147, 11) * gauss(lat, 25, 9);    // Elysium
+        e -= 0.55 * gauss(lon, 70, 11) * gauss(lat, -42, 11);  // Hellas basin
+        e -= 0.3 * gauss(lon, -43, 7) * gauss(lat, -50, 7);    // Argyre basin
+        e -= 0.34 * gauss(lon, 87, 8) * gauss(lat, 13, 8);     // Isidis basin
+        if (segDist(lon, lat, -88, -7, -45, -14) < 2.6) e -= 0.4; // Valles Marineris
+        const c = ramp(e);
+        let k = 1;
+        k *= 1 - 0.3 * gauss(lon, 68, 9) * gauss(lat, 8, 9);   // Syrtis Major, a dark patch
+        k *= 1 - 0.18 * gauss(lon, -30, 16) * gauss(lat, 45, 14);
+        let r = c[0] * k, g = c[1] * k, b = c[2] * k;
+        const cap = Math.max(smooth(80, 90, lat), smooth(-79, -88, lat));
+        r += (236 - r) * cap; g += (230 - g) * cap; b += (222 - b) * cap;
+        const i = (y * w + x) * 4;
+        img.data[i] = r; img.data[i + 1] = g; img.data[i + 2] = b; img.data[i + 3] = 255;
+      }
+    }
+    octx.putImageData(img, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(off, 0, 0, W, H);
+
+    // small craters in the southern highlands
+    const Rc = rng(9);
+    for (let i = 0; i < 140; i++) {
+      const lat = -60 + Rc() * 70, lon = Rc() * 360 - 180;
+      const x = ((lon + 180) / 360) * W, y = ((90 - lat) / 180) * H, r = 1 + Math.pow(Rc(), 2) * 5;
+      ctx.strokeStyle = "rgba(255,230,200,.14)"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.stroke();
+    }
+
+    // grid lines and degree labels
+    ctx.setLineDash([2, 5]);
+    ctx.strokeStyle = "rgba(255,240,225,.16)"; ctx.lineWidth = 1;
+    [-120, -60, 0, 60, 120].forEach((lo) => { const x = ((lo + 180) / 360) * W; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); });
+    [-60, -30, 0, 30, 60].forEach((la) => { const y = ((90 - la) / 180) * H; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); });
+    ctx.setLineDash([]);
+    ctx.fillStyle = "rgba(255,240,225,.6)";
+    ctx.font = "500 10px 'DM Mono', ui-monospace, monospace";
+    [["120°W", -120], ["60°W", -60], ["0°", 0], ["60°E", 60], ["120°E", 120]].forEach((t) => { ctx.fillText(t[0], ((t[1] + 180) / 360) * W + 4, H - 6); });
+    [["60°N", 60], ["30°N", 30], ["Equator", 0], ["30°S", -30], ["60°S", -60]].forEach((t) => { ctx.fillText(t[0], 5, ((90 - t[1]) / 180) * H - 4); });
+  }
+
+  /* ---------- Moon filters ---------- */
+  const filt = { who: "all", now: "all" };
+  function matches(m) {
+    return (filt.who === "all" || m.kind === filt.who) && (filt.now === "all" || (filt.now === "live" ? m.live : !m.live));
+  }
+  function applyMoonFilters() {
+    const ms = OF("moon");
+    let vis = 0;
+    $$("#moon-pins .pin").forEach((b) => {
+      const ok = matches(BY[b.dataset.id]);
+      b.hidden = !ok;
+      if (ok) vis++;
+    });
+    $("#moon-count").textContent = "Showing " + vis + " of " + ms.length + " sites.";
+    const host = $("#moon-dossier");
+    if (vis === 0) {
+      $$("#moon-pins .pin").forEach((b) => b.setAttribute("aria-pressed", "false"));
+      host.innerHTML = '<p class="empty">No machine matches both filters. Every robot lander on the Moon is silent, so try “Any” in one of the groups.</p>';
+    } else if (!matches(BY[current.moon]) || host.querySelector(".empty")) {
+      const first = ms.find(matches);
+      select(first.id, false);
+    }
+  }
+  function setMoonFilter(group, value) {
+    filt[group] = value;
+    $$('#moon-filters .chip[data-group="' + group + '"]').forEach((c) => c.setAttribute("aria-pressed", c.dataset.value === value ? "true" : "false"));
+    applyMoonFilters();
+  }
+  function initMoonFilters() {
+    $$("#moon-filters .chip").forEach((c) => c.addEventListener("click", () => setMoonFilter(c.dataset.group, c.dataset.value)));
+  }
+
+  /* ---------- deep space chips ---------- */
+  function buildDeepChips() {
+    const host = $("#deep-chips");
+    OF("deep").forEach((m) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "chip"; b.dataset.id = m.id; b.setAttribute("aria-pressed", "false");
+      b.innerHTML = '<span class="dot' + (m.live ? " live" : "") + '"></span>' + esc(m.name);
+      b.addEventListener("click", () => select(m.id, true));
+      host.appendChild(b);
+    });
+  }
+
+  /* ---------- charts ---------- */
+  function drawLadder() {
+    const rows = [
+      { n: "The Moon", s: "1.3 light-seconds", h: 1.28 / 3600, c: "moon" },
+      { n: "Mars", s: "3 to 22 light-minutes", h: 22 / 60, c: "mars" },
+      { n: "Pluto, during the 2015 New Horizons flyby", s: "4.5 light-hours", h: 4.5, c: "mist" },
+      { n: "Voyager 2", s: "About 20 light-hours", h: 20, c: "amber" },
+      { n: "Voyager 1", s: "24 light-hours, one light-day", h: 24, c: "amber" }
+    ];
+    const max = 24;
+    const ticks = [[0, "0"], [6, "6 h"], [12, "12 h"], [18, "18 h"], [24, "1 light-day"]];
+    $("#ladder").innerHTML =
+      rows.map((r) => '<li class="lrow"><div class="lname">' + esc(r.n) + "<small>" + esc(r.s) + '</small></div><div class="ltrack"><span class="lbar ' + r.c + '" style="width:' + ((r.h / max) * 100).toFixed(3) + '%"></span></div></li>').join("") +
+      '<li class="lrow axis" aria-hidden="true"><div></div><div class="laxis">' +
+      ticks.map((t, i) => '<span class="' + (i === 0 ? "first" : i === ticks.length - 1 ? "last" : "") + '" style="left:' + ((t[0] / max) * 100) + '%">' + t[1] + "</span>").join("") +
+      "</div></li>";
+  }
+  function drawOutlast() {
+    const DAY = 864e5, now = Date.now();
+    const curi = (now - Date.UTC(2012, 7, 6, 5, 17)) / DAY / 687;
+    const pers = (now - Date.UTC(2021, 1, 18, 20, 55)) / DAY / 687;
+    const rows = [
+      { n: "Opportunity", s: "Planned 90 Martian days, worked about 14 years", v: 57, c: "mars" },
+      { n: "Spirit", s: "Planned 90 Martian days, worked more than 6 years", v: 25, c: "mars" },
+      { n: "Ingenuity", s: "Planned 5 flights, made 72", v: 14.4, c: "mars" },
+      { n: "Sojourner", s: "Planned 7 Martian days, worked 83", v: 12, c: "mars" },
+      { n: "Curiosity", s: "Planned one Martian year, still working", v: curi, c: "live" },
+      { n: "Perseverance", s: "Planned one Martian year, still working", v: pers, c: "live" },
+      { n: "Phoenix", s: "Planned about 3 months, worked more than 5", v: 1.7, c: "mars" }
+    ].sort((a, b) => b.v - a.v);
+    const max = 60;
+    const fmt = (v) => (v >= 10 ? String(Math.round(v)) : v.toFixed(1)) + "×";
+    $("#orows").innerHTML =
+      rows.map((r) => {
+        const w = (r.v / max) * 100;
+        const inside = w > 14;
+        const lab = inside
+          ? '<span class="oval in" style="left:10px">' + fmt(r.v) + "</span>"
+          : '<span class="oval" style="left:calc(' + w.toFixed(2) + '% + 10px)">' + fmt(r.v) + "</span>";
+        return '<li class="orow"><div class="lname">' + esc(r.n) + "<small>" + esc(r.s) + '</small></div><div class="otrack"><span class="obar ' + r.c + '" style="width:' + w.toFixed(2) + '%"></span>' + lab + "</div></li>";
+      }).join("") +
+      '<li class="orow axis" aria-hidden="true"><div></div><div class="laxis">' +
+      [0, 10, 20, 30, 40, 50, 60].map((t, i) => '<span class="' + (i === 0 ? "first" : i === 6 ? "last" : "") + '" style="left:' + (t / max) * 100 + '%">' + t + "×</span>").join("") +
+      "</div></li>";
+  }
+
+  /* ---------- countdown ---------- */
+  function initCountdown() {
+    const target = Date.UTC(2026, 10, 18, 6, 16, 7);
+    const pad = (n) => String(n).padStart(2, "0");
+    const ids = ["cd-d", "cd-h", "cd-m", "cd-s"].map((i) => $("#" + i));
+    let timer = 0;
+    function tick() {
+      const d = target - Date.now();
+      if (d <= 0) {
+        ids.forEach((el) => { el.textContent = "00"; });
+        $("#countdown h3").textContent = "Voyager 1 passed one light-day from Earth";
+        $("#cd-note").textContent = "It happened on Nov. 18, 2026 at 06:16 UTC, when Voyager 1 was about 16.1 billion miles (25.9 billion km) away. A radio message from Earth now needs more than 24 hours to reach it.";
+        clearInterval(timer);
+        return;
+      }
+      const s = Math.floor(d / 1000);
+      ids[0].textContent = pad(Math.floor(s / 86400));
+      ids[1].textContent = pad(Math.floor((s % 86400) / 3600));
+      ids[2].textContent = pad(Math.floor((s % 3600) / 60));
+      ids[3].textContent = pad(s % 60);
+    }
+    tick();
+    timer = setInterval(tick, 1000);
+  }
+
+  /* ---------- quiz ---------- */
+  function initQuiz() {
+    const host = $("#quiz-list"), scoreEl = $("#quiz-score"), msg = $("#quiz-msg");
+    let score = 0, answered = 0;
+    const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; };
+    function update() {
+      scoreEl.textContent = score + " of " + QUIZ.length + " right";
+      if (answered < QUIZ.length) { msg.textContent = answered === 0 ? "Answer all ten to finish." : answered + " of " + QUIZ.length + " answered."; return; }
+      msg.textContent = score === QUIZ.length ? "Perfect score. You could run mission control."
+        : score >= 8 ? "Great work. These machines are not forgotten."
+        : score >= 5 ? "A good start. Read the files again and try once more."
+        : "Every explorer starts somewhere. Pick a world and try again.";
+    }
+    function build() {
+      host.innerHTML = ""; score = 0; answered = 0;
+      QUIZ.forEach((q, qi) => {
+        const wrap = document.createElement("div");
+        wrap.className = "q";
+        wrap.innerHTML = '<span class="qn">Question ' + (qi + 1) + " of " + QUIZ.length + '</span><p class="qtext">' + esc(q.q) + '</p><div class="opts" role="group" aria-label="Answers to question ' + (qi + 1) + '"></div><p class="why" hidden></p>';
+        const opts = $(".opts", wrap), why = $(".why", wrap), buttons = [];
+        shuffle(q.a.map((t, i) => i)).forEach((i) => {
+          const b = document.createElement("button");
+          b.type = "button"; b.className = "opt"; b.textContent = q.a[i]; b.dataset.i = i;
+          b.addEventListener("click", () => {
+            const ok = i === q.c;
+            buttons.forEach((x) => { x.disabled = true; if (+x.dataset.i === q.c) x.classList.add("right"); });
+            if (!ok) b.classList.add("wrong");
+            why.innerHTML = "<b>" + (ok ? "Right." : "Not quite.") + "</b> " + esc(q.why);
+            why.hidden = false;
+            answered++; if (ok) score++;
+            update();
+          });
+          buttons.push(b); opts.appendChild(b);
+        });
+        host.appendChild(wrap);
+      });
+      update();
+    }
+    $("#quiz-reset").addEventListener("click", () => { build(); host.scrollIntoView({ block: "start", behavior: reduceMotion() ? "auto" : "smooth" }); });
+    build();
+  }
+
+  /* ---------- jump buttons, counts, sources ---------- */
+  function goTo(id) {
+    const m = BY[id];
+    if (!m) return;
+    if (m.world === "moon") { filt.who = "all"; filt.now = "all"; setMoonFilter("who", "all"); setMoonFilter("now", "all"); }
+    select(id, false);
+    const box = $("#" + m.world + "-dossier").closest(".explorer");
+    const top = box.getBoundingClientRect().top + window.scrollY - 72;
+    window.scrollTo({ top: top, behavior: reduceMotion() ? "auto" : "smooth" });
+  }
+  function initStatic() {
+    $$(".gobtn").forEach((b) => b.addEventListener("click", () => goTo(b.dataset.go)));
+    const c = { moon: OF("moon").length, mars: OF("mars").length, deep: OF("deep").length };
+    $('[data-count="moon"]').textContent = c.moon + " sites, 1.3 light-seconds away";
+    $('[data-count="mars"]').textContent = c.mars + " machines, 3 to 22 light-minutes away";
+    $('[data-count="deep"]').textContent = c.deep + " spacecraft, up to 1 light-day away";
+    $(".hero-meta").textContent = MACHINES.length + " machines in three places. Every date and number is checked against the sources at the bottom.";
+    Object.keys(SRC_GROUPS).forEach((w) => {
+      $("#src-" + w).innerHTML = SRC_GROUPS[w].map((k) => '<li><a href="' + SRC[k][1] + '" target="_blank" rel="noopener">' + esc(SRC[k][0]) + "</a></li>").join("");
+    });
+  }
+
+  /* ---------- keep the big headline inside the screen ---------- */
+  function fitHero() {
+    const h1 = $(".hero h1");
+    if (!h1) return;
+    h1.style.fontSize = "";
+    const avail = h1.clientWidth;
+    let widest = 0;
+    $$("span", h1).forEach((sp) => {
+      if (sp.classList.contains("mid")) return;
+      const rg = document.createRange();
+      rg.selectNodeContents(sp);
+      widest = Math.max(widest, rg.getBoundingClientRect().width);
+    });
+    if (widest > avail && avail > 0) {
+      const cur = parseFloat(getComputedStyle(h1).fontSize);
+      h1.style.fontSize = Math.floor((cur * avail) / widest * 0.97) + "px";
+    }
+  }
+
+  /* ---------- start ---------- */
+  function redraw() { fitHero(); drawStars(); drawMoon(); drawMars(); }
+  buildMoonPins();
+  buildMarsPins();
+  buildDeepChips();
+  initStatic();
+  initMoonFilters();
+  drawLadder();
+  drawOutlast();
+  initCountdown();
+  initQuiz();
+  select("apollo12", false);
+  select("opportunity", false);
+  select("voyager1", false);
+  applyMoonFilters();
+  redraw();
+  if (window.ResizeObserver) {
+    let t = 0;
+    const ro = new ResizeObserver(() => { clearTimeout(t); t = setTimeout(redraw, 120); });
+    ["#top", ".moonbox", ".marsbox"].forEach((s) => { const el = $(s); if (el) ro.observe(el); });
+  } else {
+    window.addEventListener("resize", redraw);
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { fitHero(); drawMars(); });
+})();
+</script>
+</body>
+</html>
